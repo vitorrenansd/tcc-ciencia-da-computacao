@@ -5,11 +5,7 @@ import com.tcc.serveme.api.model.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import java.sql.PreparedStatement;
-import java.sql.Statement;
 import java.util.List;
 
 @Repository
@@ -42,26 +38,12 @@ public class ProductRepository {
         return products;
     }
 
-    public long save(Product product) {
+    public int save(Product product) {
         String sql = """
                 INSERT INTO product (fk_category, name, description, price, inactive)
                 VALUES (?, ?, ?, ?, ?)
                 """;
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-
-        jdbc.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(
-                sql,
-                Statement.RETURN_GENERATED_KEYS
-            );
-            ps.setLong(1, product.getCategory().getId());
-            ps.setString(2, product.getName());
-            ps.setString(3, product.getDescription());
-            ps.setBigDecimal(4, product.getPrice());
-            ps.setBoolean(5, product.isInactive());
-            return ps;
-        }, keyHolder);
-       return keyHolder.getKey().longValue();
+        return jdbc.update(sql, product.getCategory(), product.getName(), product.getDescription(), product.getPrice(), product.isInactive());
     }
 
     public int update(Product product) {
