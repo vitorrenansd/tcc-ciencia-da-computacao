@@ -46,22 +46,24 @@ public class ProductRepository {
         return jdbc.update(sql, product.getCategory(), product.getName(), product.getDescription(), product.getPrice(), product.isInactive());
     }
 
-    public int update(Product product) {
+    public boolean update(Product product) {
         String sql = """
                 UPDATE product
                 SET fk_category = ?, name = ?, description = ?, price = ?, inactive = ?
                 WHERE id = ?
                 """;
-        return jdbc.update(sql, product.getCategory(), product.getName(), product.getDescription(), product.getPrice(), product.isInactive(), product.getId());
+        int rows = jdbc.update(sql, product.getCategory(), product.getName(), product.getDescription(), product.getPrice(), product.isInactive(), product.getId());
+        return rows == 1;
     }
 
-    public int softDelete(Long id) {
+    public boolean softDelete(Long id) {
         String sql = """
                 UPDATE product
                 SET inactive = TRUE
                 WHERE id = ?
                 """;
-        return jdbc.update(sql, id);
+        int rows = jdbc.update(sql, id);
+        return rows == 1;
     }
 
     // *******************************
