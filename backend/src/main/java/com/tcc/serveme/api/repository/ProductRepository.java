@@ -66,9 +66,28 @@ public class ProductRepository {
         return rows == 1;
     }
 
-    // *******************************
-    // Product-specific queries below
-    // *******************************
+    // ************************
+    //  Specific queries below
+    // ************************
+    
+    public Product findByIdIncludingInactive(Long id) {
+        String sql = """
+                SELECT id, fk_category, name, description, price, inactive
+                FROM product
+                WHERE id = ?
+                """;
+        Product product = jdbc.queryForObject(sql, new BeanPropertyRowMapper<>(Product.class), id);
+        return product;
+    }
+
+    public List<Product> findAllIncludingInactive() {
+        String sql = """
+                SELECT id, fk_category, name, description, price, inactive
+                FROM product
+                """;
+        List<Product> products = jdbc.query(sql, new BeanPropertyRowMapper<>(Product.class));
+        return products;
+    }
 
     public List<Product> findByName(String keyword) {
         String sql = """
@@ -81,13 +100,13 @@ public class ProductRepository {
         return jdbc.query(sql, new BeanPropertyRowMapper<>(Product.class), searchPattern);
     }
 
-    public List<Product> findByNameIncludingInactive(String keyword) {
+    public List<Product> findByCategory(Long categoryId) {
         String sql = """
                 SELECT id, fk_category, name, description, price, inactive
                 FROM product
-                WHERE name LIKE ?
+                WHERE fk_category = ?
+                AND inactive = FALSE
                 """;
-        String searchPattern = "%" + keyword + "%";
-        return jdbc.query(sql, new BeanPropertyRowMapper<>(Product.class), searchPattern);
+        return jdbc.query(sql, new BeanPropertyRowMapper<>(Product.class), categoryId);
     }
 }
