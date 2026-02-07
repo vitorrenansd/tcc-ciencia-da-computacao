@@ -94,7 +94,7 @@ public class OrdersRepository {
         String sql = """
                 UPDATE orders
                 SET status = 'CANCELED'
-                WHERE id - ?
+                WHERE id = ?
                 """;
         int rows = jdbc.update(sql, id);
         return rows == 1;
