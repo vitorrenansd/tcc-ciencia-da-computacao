@@ -16,5 +16,63 @@ public class OrderItemRepository {
     public OrderItemRepository(JdbcTemplate jdbc) {
         this.jdbc = jdbc;
     }
+
+    public int save(OrderItem orderItem) {
+        String sql = """
+                INSERT INTO order_item (order_id, product_id, quantity, notes)
+                VALUES (?, ?, ?, ?)
+                """;
+        return jdbc.update(sql, orderItem.getOrderId(), orderItem.getProductId(), orderItem.getQuantity(), orderItem.getNotes());
+    }
     
+    // ************************
+    //  Specific queries below
+    // ************************
+
+    public List<OrderItem> findActiveOrderItemsByTableNumber(Integer tableNumber) {
+        String sql = """
+                SELECT 
+                    oi.id,
+                    oi.order_id,
+                    oi.product_id,
+                    oi.quantity,
+                    oi.notes,
+                    oi.canceled
+                FROM order_item oi
+                INNER JOIN orders o ON o.id = oi.order_id
+                WHERE o.table_number = ?
+                AND o.status IN ('PENDING', 'IN_PROGRESS')
+                """;
+        List<OrderItem> items = jdbc.query(sql, new BeanPropertyRowMapper<>(OrderItem.class), tableNumber);
+        return items;
+    }
+
+    public List<OrderItem> findActiveOrderItemsByCustomerName(String customerName) {
+        String sql = """
+                SELECT
+                    oi.id,
+                    oi.order_id,
+                    oi.product_id,
+                    oi.quantity,
+                    oi.notes,
+                    oi.canceled
+                FROM order_item oi
+                INNER JOIN orders o ON o.id = oi.order_id
+                WHERE o.customer_name LIKE ?
+                AND o.status IN ('PENDING', 'IN_PROGRESS')
+                """;
+        String searchPattern = "%" + customerName + "%";
+        List<OrderItem> items = jdbc.query(sql, new BeanPropertyRowMapper<>(OrderItem.class), searchPattern);
+        return items;
+    }
+
+    public boolean cancel(Long id) {
+        String sql = """
+                UPDATE order_item
+                SET canceled = TRUE
+                WHERE id = ?
+                """;
+        int rows = jdbc.update(sql, id);
+        return rows == 1;
+    }
 }
