@@ -6,29 +6,29 @@ import java.util.ArrayList;
 import java.util.List;
 import java.time.LocalDateTime;
 
-public class Order {
+public class Orders {
     private Long id;
     private Integer tableNumber;
-    private String waiter;
+    private String customerName;
     private List<OrderItem> items = new ArrayList<>();
     private OrderStatus status;
     private LocalDateTime createdAt;
 
 
     // Construtor para novos itens
-    public Order(Integer tableNumber, String waiter, List<OrderItem> items) {
+    public Orders(Integer tableNumber, String customerName, List<OrderItem> items) {
         this.tableNumber = tableNumber;
-        this.waiter = waiter;
+        this.customerName = customerName;
         this.items = items;
         this.status = OrderStatus.PENDING;
         this.createdAt = LocalDateTime.now();
     }
 
     // Construtor para reconstruir obj a partir do banco de dados
-    public Order(Long id, Integer tableNumber, String waiter, List<OrderItem> items, OrderStatus status, LocalDateTime createdAt) {
+    public Orders(Long id, Integer tableNumber, String customerName, List<OrderItem> items, OrderStatus status, LocalDateTime createdAt) {
         this.id = id;
         this.tableNumber = tableNumber;
-        this.waiter = waiter;
+        this.customerName = customerName;
         this.items = items;
         this.status = status;
         this.createdAt = createdAt;
@@ -43,8 +43,8 @@ public class Order {
         return this.tableNumber;
     }
 
-    public String getWaiter() {
-        return this.waiter;
+    public String getCustomerName() {
+        return this.customerName;
     }
 
     public List<OrderItem> getItems() {

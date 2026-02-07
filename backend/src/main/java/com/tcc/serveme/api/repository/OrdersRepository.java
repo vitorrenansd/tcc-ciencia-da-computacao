@@ -1,6 +1,6 @@
 package com.tcc.serveme.api.repository;
 
-import com.tcc.serveme.api.model.Order;
+import com.tcc.serveme.api.model.Orders;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -9,68 +9,70 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public class OrderRepository {
+public class OrdersRepository {
     private final JdbcTemplate jdbc;
 
     @Autowired
-    public OrderRepository(JdbcTemplate jdbc) {
+    public OrdersRepository(JdbcTemplate jdbc) {
         this.jdbc = jdbc;
     }
     
-    public Order findById(Long id) {
+    public Orders findById(Long id) {
         String sql = """
-                SELECT id, table_number, waiter, created_at, status
-                FROM order
+                SELECT id, table_number, customer_name, created_at, status
+                FROM orders
                 WHERE id = ?
                 """;
-        Order order = jdbc.queryForObject(sql, new BeanPropertyRowMapper<>(Order.class), id);
+        Orders order = jdbc.queryForObject(sql, new BeanPropertyRowMapper<>(Orders.class), id);
         return order;
     }
 
-    public List<Order> findAll() {
+    public List<Orders> findAll() {
         String sql = """
-                SELECT id, table_number, waiter, created_at, status
-                FROM order
+                SELECT id, table_number, customer_name, created_at, status
+                FROM orders
                 """;
-        List<Order> orders = jdbc.query(sql, new BeanPropertyRowMapper<>(Order.class));
+        List<Orders> orders = jdbc.query(sql, new BeanPropertyRowMapper<>(Orders.class));
         return orders;
     }
 
-    public int save(Order order) {
+    public int save(Orders order) {
         String sql = """
-                INSERT INTO order (table_number, waiter, created_at, status)
+                INSERT INTO orders (table_number, customer_name, created_at, status)
                 VALUES (?, ?, ?, ?)
                 """;
-        return jdbc.update(sql, order.getTableNumber(), order.getWaiter(), order.getCreatedAt(), order.getStatus());
+        return jdbc.update(sql, order.getTableNumber(), order.getCustomerName(), order.getCreatedAt(), order.getStatus());
     }
 
     // ************************
     //  Specific queries below
     // ************************
 
-    public List<Order> findByTableNumber(String tableNumber) {
+    public List<Orders> findActiveOrdersByTableNumber(String tableNumber) {
         String sql = """
                 SELECT id, table_number, customer_name, created_at, status
-                FROM order
+                FROM orders
                 WHERE table_number LIKE ?
+                AND status NOT IN ('CANCELED', 'COMPLETED')
                 """;
         String searchPattern = tableNumber + "%";
-        return jdbc.query(sql, new BeanPropertyRowMapper<>(Order.class), searchPattern);
+        return jdbc.query(sql, new BeanPropertyRowMapper<>(Orders.class), searchPattern);
     }
 
-    public List<Order> findByCustomerName(String keyword) {
+    public List<Orders> findActiveOrdersByCustomerName(String keyword) {
         String sql = """
                 SELECT id, table_number, customer_name, created_at, status
-                FROM order
+                FROM orders
                 WHERE customer_name LIKE ?
+                AND status NOT LIKE 'CANCELED'
                 """;
         String searchPattern = "%" + keyword + "%";
-        return jdbc.query(sql, new BeanPropertyRowMapper<>(Order.class), searchPattern);
+        return jdbc.query(sql, new BeanPropertyRowMapper<>(Orders.class), searchPattern);
     }
 
     public boolean markAsInProgress(Long id) {
         String sql = """
-                UPDATE order
+                UPDATE orders
                 SET status = 'IN_PROGRESS'
                 WHERE id = ?
                 """;
@@ -80,7 +82,7 @@ public class OrderRepository {
 
     public boolean markAsCompleted(Long id) {
         String sql = """
-                UPDATE order
+                UPDATE orders
                 SET status = 'COMPLETED'
                 WHERE id = ?
                 """;
@@ -90,7 +92,7 @@ public class OrderRepository {
 
     public boolean cancel(Long id) {
         String sql = """
-                UPDATE order
+                UPDATE orders
                 SET status = 'CANCELED'
                 WHERE id - ?
                 """;
