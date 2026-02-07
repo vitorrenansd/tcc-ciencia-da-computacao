@@ -53,7 +53,7 @@ public class OrdersRepository {
                 SELECT id, table_number, customer_name, created_at, status
                 FROM orders
                 WHERE table_number LIKE ?
-                AND status NOT IN ('CANCELED', 'COMPLETED')
+                AND status IN ('PENDING', 'IN_PROGRESS')
                 """;
         String searchPattern = tableNumber + "%";
         return jdbc.query(sql, new BeanPropertyRowMapper<>(Orders.class), searchPattern);
@@ -64,7 +64,7 @@ public class OrdersRepository {
                 SELECT id, table_number, customer_name, created_at, status
                 FROM orders
                 WHERE customer_name LIKE ?
-                AND status NOT LIKE 'CANCELED'
+                AND status IN ('PENDING', 'IN_PROGRESS')
                 """;
         String searchPattern = "%" + keyword + "%";
         return jdbc.query(sql, new BeanPropertyRowMapper<>(Orders.class), searchPattern);
