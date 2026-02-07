@@ -7,8 +7,8 @@ import java.util.List;
 
 public class OrderMapper {
 
-    public static Order toEntity(OrderRequest dto, List<OrderItem> items) {
-        return new Order(
+    public static Orders toEntity(OrderRequest dto, List<OrderItem> items) {
+        return new Orders(
             dto.tableNumber(),
             dto.customerName(),
             items
