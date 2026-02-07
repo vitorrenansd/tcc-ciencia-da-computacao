@@ -17,10 +17,10 @@ CREATE TABLE product (
         REFERENCES product_category(id)
 );
 
-CREATE TABLE order (
+CREATE TABLE orders (
     id IDENTITY PRIMARY KEY,
     table_number INT NOT NULL,
-    waiter VARCHAR(20) NOT NULL,
+    customer_name VARCHAR(20) NOT NULL,
     status VARCHAR(20) DEFAULT 'PENDING'
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 );

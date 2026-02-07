@@ -10,7 +10,7 @@ public class OrderMapper {
     public static Order toEntity(OrderRequest dto, List<OrderItem> items) {
         return new Order(
             dto.tableNumber(),
-            dto.waiter(),
+            dto.customerName(),
             items
         );
     }
