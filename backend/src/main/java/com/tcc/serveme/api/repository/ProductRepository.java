@@ -19,7 +19,7 @@ public class ProductRepository {
 
     public Product findById(Long id) {
         String sql = """
-                SELECT id, fk_category, name, description, price, inactive
+                SELECT id, category_id, name, description, price, inactive
                 FROM product
                 WHERE id = ?
                 AND inactive = FALSE
@@ -30,7 +30,7 @@ public class ProductRepository {
 
     public List<Product> findAll() {
         String sql = """
-                SELECT id, fk_category, name, description, price, inactive
+                SELECT id, category_id, name, description, price, inactive
                 FROM product
                 WHERE inactive = FALSE
                 """;
@@ -40,19 +40,19 @@ public class ProductRepository {
 
     public int save(Product product) {
         String sql = """
-                INSERT INTO product (fk_category, name, description, price, inactive)
+                INSERT INTO product (category_id, name, description, price, inactive)
                 VALUES (?, ?, ?, ?, ?)
                 """;
-        return jdbc.update(sql, product.getCategory(), product.getName(), product.getDescription(), product.getPrice(), product.isInactive());
+        return jdbc.update(sql, product.getCategoryId(), product.getName(), product.getDescription(), product.getPrice(), product.isInactive());
     }
 
     public boolean update(Product product) {
         String sql = """
                 UPDATE product
-                SET fk_category = ?, name = ?, description = ?, price = ?, inactive = ?
+                SET category_id = ?, name = ?, description = ?, price = ?, inactive = ?
                 WHERE id = ?
                 """;
-        int rows = jdbc.update(sql, product.getCategory(), product.getName(), product.getDescription(), product.getPrice(), product.isInactive(), product.getId());
+        int rows = jdbc.update(sql, product.getCategoryId(), product.getName(), product.getDescription(), product.getPrice(), product.isInactive(), product.getId());
         return rows == 1;
     }
 
@@ -72,7 +72,7 @@ public class ProductRepository {
     
     public Product findByIdIncludingInactive(Long id) {
         String sql = """
-                SELECT id, fk_category, name, description, price, inactive
+                SELECT id, category_id, name, description, price, inactive
                 FROM product
                 WHERE id = ?
                 """;
@@ -82,7 +82,7 @@ public class ProductRepository {
 
     public List<Product> findAllIncludingInactive() {
         String sql = """
-                SELECT id, fk_category, name, description, price, inactive
+                SELECT id, category_id, name, description, price, inactive
                 FROM product
                 """;
         List<Product> products = jdbc.query(sql, new BeanPropertyRowMapper<>(Product.class));
@@ -91,7 +91,7 @@ public class ProductRepository {
 
     public List<Product> findByName(String keyword) {
         String sql = """
-                SELECT id, fk_category, name, description, price, inactive
+                SELECT id, category_id, name, description, price, inactive
                 FROM product
                 WHERE name LIKE ?
                 AND inactive = FALSE
@@ -102,9 +102,9 @@ public class ProductRepository {
 
     public List<Product> findByCategory(Long categoryId) {
         String sql = """
-                SELECT id, fk_category, name, description, price, inactive
+                SELECT id, category_id, name, description, price, inactive
                 FROM product
-                WHERE fk_category = ?
+                WHERE category_id = ?
                 AND inactive = FALSE
                 """;
         return jdbc.query(sql, new BeanPropertyRowMapper<>(Product.class), categoryId);

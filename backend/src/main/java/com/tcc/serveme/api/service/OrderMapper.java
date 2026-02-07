@@ -15,9 +15,9 @@ public class OrderMapper {
         );
     }
 
-    public static OrderItem toEntity(OrderItemRequest dto, Product product) {
+    public static OrderItem toEntity(OrderItemRequest dto) {
         return new OrderItem(
-            product,
+            dto.productId(),
             dto.quantity(),
             dto.notes()
         );

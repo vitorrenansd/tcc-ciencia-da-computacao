@@ -1,7 +1,7 @@
 package com.tcc.serveme.api.dto;
 
 public record OrderItemRequest(
-    Integer productId,
+    Long productId,
     Integer quantity,
     String notes
 ) {}
