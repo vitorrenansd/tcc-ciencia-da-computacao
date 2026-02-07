@@ -2,24 +2,26 @@ package com.tcc.serveme.api.model;
 
 public class OrderItem {
     private Long id;
-    private Product product;
+    private Long orderId;
+    private Long productId;
     private Integer quantity;
     private String notes;
     private Boolean canceled;
 
 
-    // Construtor para novos itens
-    public OrderItem(Product product, Integer quantity, String notes) {
-        this.product = product;
+    // Usado na criação do pedido (antes de order existir)
+    public OrderItem(Long productId, Integer quantity, String notes) {
+        this.productId = productId;
         this.quantity = quantity;
         this.notes = notes;
         this.canceled = false;
     }
 
-    // Construtor para reconstruir obj a partir do banco de dados
-    public OrderItem(Long id, Product product, Integer quantity, String notes, Boolean canceled) {
+    // Usado para reconstruir obj a partir do banco de dados (construtor completo)
+    public OrderItem(Long id, Long orderId, Long productId, Integer quantity, String notes, Boolean canceled) {
         this.id = id;
-        this.product = product;
+        this.orderId = orderId;
+        this.productId = productId;
         this.quantity = quantity;
         this.notes = notes;
         this.canceled = canceled;
@@ -30,8 +32,12 @@ public class OrderItem {
         return this.id;
     }
 
-    public Product getProduct() {
-        return this.product;
+    public Long getOrderId() {
+        return this.orderId;
+    }
+    
+    public Long getProductId() {
+        return this.productId;
     }
 
     public Integer getQuantity() {

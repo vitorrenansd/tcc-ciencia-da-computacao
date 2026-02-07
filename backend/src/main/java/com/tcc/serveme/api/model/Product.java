@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 
 public class Product {
     private Long id;
-    private ProductCategory category;
+    private Long categoryId;
     private String name;
     private String description;
     private BigDecimal price;
@@ -12,8 +12,8 @@ public class Product {
 
 
     // Construtor para novos produtos
-    public Product(ProductCategory category, String name, String description, BigDecimal price) {
-        this.category = category;
+    public Product(Long categoryId, String name, String description, BigDecimal price) {
+        this.categoryId = categoryId;
         this.name = name;
         this.description = description;
         this.price = price;
@@ -21,9 +21,9 @@ public class Product {
     }
 
     // Construtor para reconstruir obj a partir do banco de dados
-    public Product(Long id, ProductCategory category, String name, String description, BigDecimal price, boolean inactive) {
+    public Product(Long id, Long categoryId, String name, String description, BigDecimal price, boolean inactive) {
         this.id = id;
-        this.category = category;
+        this.categoryId = categoryId;
         this.name = name;
         this.description = description;
         this.price = price;
@@ -35,8 +35,8 @@ public class Product {
         return this.id;
     }
 
-    public ProductCategory getCategory() {
-        return this.category;
+    public Long getCategoryId() {
+        return this.categoryId;
     }
 
     public String getName() {
