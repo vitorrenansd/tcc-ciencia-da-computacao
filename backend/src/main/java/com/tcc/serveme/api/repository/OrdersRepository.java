@@ -1,9 +1,9 @@
 package com.tcc.serveme.api.repository;
 
 import com.tcc.serveme.api.model.Orders;
+import com.tcc.serveme.api.repository.mapper.OrdersRowMapper;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import java.util.List;
@@ -11,6 +11,7 @@ import java.util.List;
 @Repository
 public class OrdersRepository {
     private final JdbcTemplate jdbc;
+    private static final OrdersRowMapper ROW_MAPPER = new OrdersRowMapper();
 
     @Autowired
     public OrdersRepository(JdbcTemplate jdbc) {
@@ -23,7 +24,7 @@ public class OrdersRepository {
                 FROM orders
                 WHERE id = ?
                 """;
-        Orders order = jdbc.queryForObject(sql, new BeanPropertyRowMapper<>(Orders.class), id);
+        Orders order = jdbc.queryForObject(sql, ROW_MAPPER, id);
         return order;
     }
 
@@ -32,7 +33,7 @@ public class OrdersRepository {
                 SELECT id, table_number, customer_name, created_at, status
                 FROM orders
                 """;
-        List<Orders> orders = jdbc.query(sql, new BeanPropertyRowMapper<>(Orders.class));
+        List<Orders> orders = jdbc.query(sql, ROW_MAPPER);
         return orders;
     }
 
@@ -56,7 +57,7 @@ public class OrdersRepository {
                 AND status IN ('PENDING', 'IN_PROGRESS')
                 """;
         String searchPattern = tableNumber + "%";
-        return jdbc.query(sql, new BeanPropertyRowMapper<>(Orders.class), searchPattern);
+        return jdbc.query(sql, ROW_MAPPER, searchPattern);
     }
 
     public List<Orders> findActiveOrdersByCustomerName(String keyword) {
@@ -67,7 +68,7 @@ public class OrdersRepository {
                 AND status IN ('PENDING', 'IN_PROGRESS')
                 """;
         String searchPattern = "%" + keyword + "%";
-        return jdbc.query(sql, new BeanPropertyRowMapper<>(Orders.class), searchPattern);
+        return jdbc.query(sql, ROW_MAPPER, searchPattern);
     }
 
     public boolean markAsInProgress(Long id) {

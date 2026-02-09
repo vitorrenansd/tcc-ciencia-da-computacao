@@ -1,9 +1,9 @@
 package com.tcc.serveme.api.repository;
 
 import com.tcc.serveme.api.model.Product;
+import com.tcc.serveme.api.repository.mapper.ProductRowMapper;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import java.util.List;
@@ -11,6 +11,7 @@ import java.util.List;
 @Repository
 public class ProductRepository {
     private final JdbcTemplate jdbc;
+    private static final ProductRowMapper ROW_MAPPER = new ProductRowMapper();
 
     @Autowired
     public ProductRepository(JdbcTemplate jdbc) {
@@ -24,7 +25,7 @@ public class ProductRepository {
                 WHERE id = ?
                 AND inactive = FALSE
                 """;
-        Product product = jdbc.queryForObject(sql, new BeanPropertyRowMapper<>(Product.class), id);
+        Product product = jdbc.queryForObject(sql, ROW_MAPPER, id);
         return product;
     }
 
@@ -34,7 +35,7 @@ public class ProductRepository {
                 FROM product
                 WHERE inactive = FALSE
                 """;
-        List<Product> products = jdbc.query(sql, new BeanPropertyRowMapper<>(Product.class));
+        List<Product> products = jdbc.query(sql, ROW_MAPPER);
         return products;
     }
 
@@ -76,7 +77,7 @@ public class ProductRepository {
                 FROM product
                 WHERE id = ?
                 """;
-        Product product = jdbc.queryForObject(sql, new BeanPropertyRowMapper<>(Product.class), id);
+        Product product = jdbc.queryForObject(sql, ROW_MAPPER, id);
         return product;
     }
 
@@ -85,7 +86,7 @@ public class ProductRepository {
                 SELECT id, category_id, name, description, price, inactive
                 FROM product
                 """;
-        List<Product> products = jdbc.query(sql, new BeanPropertyRowMapper<>(Product.class));
+        List<Product> products = jdbc.query(sql, ROW_MAPPER);
         return products;
     }
 
@@ -97,7 +98,7 @@ public class ProductRepository {
                 AND inactive = FALSE
                 """;
         String searchPattern = "%" + keyword + "%";
-        return jdbc.query(sql, new BeanPropertyRowMapper<>(Product.class), searchPattern);
+        return jdbc.query(sql, ROW_MAPPER, searchPattern);
     }
 
     public List<Product> findByCategory(Long categoryId) {
@@ -107,6 +108,6 @@ public class ProductRepository {
                 WHERE category_id = ?
                 AND inactive = FALSE
                 """;
-        return jdbc.query(sql, new BeanPropertyRowMapper<>(Product.class), categoryId);
+        return jdbc.query(sql, ROW_MAPPER, categoryId);
     }
 }
