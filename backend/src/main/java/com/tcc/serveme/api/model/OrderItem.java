@@ -14,6 +14,14 @@ public class OrderItem {
         this.productId = productId;
         this.quantity = quantity;
         this.notes = notes;
+    }
+
+    // Usado na inclusão de itens no banco de dados
+    public OrderItem(Long orderId, Long productId, Integer quantity, String notes) {
+        this.orderId = orderId;
+        this.productId = productId;
+        this.quantity = quantity;
+        this.notes = notes;
         this.canceled = false;
     }
 
