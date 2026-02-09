@@ -8,8 +8,7 @@ import com.tcc.serveme.api.model.OrderItem;
 import java.util.List;
 
 public class OrderMapper {
-
-    public static Orders toEntity(OrderRequest dto, List<OrderItem> items) {
+    public static Orders toModel(OrderRequest dto, List<OrderItem> items) {
         return new Orders(
             dto.tableNumber(),
             dto.customerName(),
@@ -17,7 +16,7 @@ public class OrderMapper {
         );
     }
 
-    public static OrderItem toEntity(OrderItemRequest dto) {
+    public static OrderItem toModel(OrderItemRequest dto) {
         return new OrderItem(
             dto.productId(),
             dto.quantity(),
