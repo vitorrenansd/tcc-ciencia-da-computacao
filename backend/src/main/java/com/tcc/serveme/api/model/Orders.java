@@ -2,7 +2,6 @@ package com.tcc.serveme.api.model;
 
 import com.tcc.serveme.api.model.enums.OrderStatus;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.time.LocalDateTime;
 
@@ -10,7 +9,6 @@ public class Orders {
     private Long id;
     private Integer tableNumber;
     private String customerName;
-    private List<OrderItem> items = new ArrayList<>();
     private OrderStatus status;
     private LocalDateTime createdAt;
 
@@ -19,7 +17,6 @@ public class Orders {
     public Orders(Integer tableNumber, String customerName, List<OrderItem> items) {
         this.tableNumber = tableNumber;
         this.customerName = customerName;
-        this.items = items;
         this.status = OrderStatus.PENDING;
         this.createdAt = LocalDateTime.now();
     }
@@ -29,7 +26,6 @@ public class Orders {
         this.id = id;
         this.tableNumber = tableNumber;
         this.customerName = customerName;
-        this.items = items;
         this.status = status;
         this.createdAt = createdAt;
     }
@@ -45,10 +41,6 @@ public class Orders {
 
     public String getCustomerName() {
         return this.customerName;
-    }
-
-    public List<OrderItem> getItems() {
-        return List.copyOf(this.items);
     }
 
     public OrderStatus getStatus() {
