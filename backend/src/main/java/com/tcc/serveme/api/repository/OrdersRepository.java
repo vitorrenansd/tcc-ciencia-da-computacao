@@ -87,33 +87,30 @@ public class OrdersRepository {
         return jdbc.query(sql, ROW_MAPPER, searchPattern);
     }
 
-    public boolean markAsInProgress(Long id) {
+    public int markAsInProgress(Long id) {
         String sql = """
                 UPDATE orders
                 SET status = 'IN_PROGRESS'
                 WHERE id = ?
                 """;
-        int rows = jdbc.update(sql, id);
-        return rows == 1;
+        return jdbc.update(sql, id);
     }
 
-    public boolean markAsCompleted(Long id) {
+    public int markAsCompleted(Long id) {
         String sql = """
                 UPDATE orders
                 SET status = 'COMPLETED'
                 WHERE id = ?
                 """;
-        int rows = jdbc.update(sql, id);
-        return rows == 1;
+        return jdbc.update(sql, id);
     }
 
-    public boolean cancel(Long id) {
+    public int cancel(Long id) {
         String sql = """
                 UPDATE orders
                 SET status = 'CANCELED'
                 WHERE id = ?
                 """;
-        int rows = jdbc.update(sql, id);
-        return rows == 1;
+        return jdbc.update(sql, id);
     }
 }

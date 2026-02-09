@@ -67,13 +67,12 @@ public class OrderItemRepository {
         return items;
     }
 
-    public boolean cancel(Long id) {
+    public int cancel(Long id) {
         String sql = """
                 UPDATE order_item
                 SET canceled = TRUE
                 WHERE id = ?
                 """;
-        int rows = jdbc.update(sql, id);
-        return rows == 1;
+        return jdbc.update(sql, id);
     }
 }
