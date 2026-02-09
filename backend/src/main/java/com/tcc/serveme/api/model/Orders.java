@@ -21,8 +21,8 @@ public class Orders {
         this.createdAt = LocalDateTime.now();
     }
 
-    // Construtor para reconstruir obj a partir do banco de dados
-    public Orders(Long id, Integer tableNumber, String customerName, List<OrderItem> items, OrderStatus status, LocalDateTime createdAt) {
+    // Usado para reconstrução a partir do banco de dados (construtor completo)
+    public Orders(Long id, Integer tableNumber, String customerName, OrderStatus status, LocalDateTime createdAt) {
         this.id = id;
         this.tableNumber = tableNumber;
         this.customerName = customerName;
