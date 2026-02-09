@@ -9,7 +9,7 @@ public class OrderItem {
     private Boolean canceled;
 
 
-    // Usado na criação do pedido (antes de order existir)
+    // Construtor com apenas o necessário pelo input do front (dto)
     public OrderItem(Long productId, Integer quantity, String notes) {
         this.productId = productId;
         this.quantity = quantity;
@@ -17,7 +17,7 @@ public class OrderItem {
         this.canceled = false;
     }
 
-    // Usado para reconstruir obj a partir do banco de dados (construtor completo)
+    // Usado para reconstrução a partir do banco de dados (construtor completo)
     public OrderItem(Long id, Long orderId, Long productId, Integer quantity, String notes, Boolean canceled) {
         this.id = id;
         this.orderId = orderId;

@@ -15,7 +15,7 @@ public class Orders {
     private LocalDateTime createdAt;
 
 
-    // Construtor para novos itens
+    // Usado na inclusão de pedidos no banco de dados
     public Orders(Integer tableNumber, String customerName, List<OrderItem> items) {
         this.tableNumber = tableNumber;
         this.customerName = customerName;

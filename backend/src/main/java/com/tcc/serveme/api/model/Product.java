@@ -11,7 +11,7 @@ public class Product {
     private Boolean inactive;
 
 
-    // Construtor para novos produtos
+    // Usado na inclusão de produto novo no banco de dados
     public Product(Long categoryId, String name, String description, BigDecimal price) {
         this.categoryId = categoryId;
         this.name = name;
@@ -20,7 +20,7 @@ public class Product {
         this.inactive = false;
     }
 
-    // Construtor para reconstruir obj a partir do banco de dados
+    // Usado para reconstrução a partir do banco de dados (construtor completo)
     public Product(Long id, Long categoryId, String name, String description, BigDecimal price, boolean inactive) {
         this.id = id;
         this.categoryId = categoryId;

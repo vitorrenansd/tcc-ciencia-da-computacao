@@ -6,13 +6,13 @@ public class ProductCategory {
     private Boolean inactive;
 
 
-    // Construtor para novas categorias
+    // Usado na inclusão de categoria nova no banco de dados
     public ProductCategory(String name) {
         this.name = name;
         this.inactive = false;
     }
 
-    // Construtor para reconstruir obj a partir do banco de dados
+    // Usado para reconstrução a partir do banco de dados (construtor completo)
     public ProductCategory(Long id, String name, Boolean inactive) {
         this.id = id;
         this.name = name;
