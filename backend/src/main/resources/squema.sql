@@ -22,7 +22,7 @@ CREATE TABLE orders (
     table_number INT NOT NULL,
     customer_name VARCHAR(20) NOT NULL,
     status VARCHAR(20) DEFAULT 'PENDING',
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE order_item (
