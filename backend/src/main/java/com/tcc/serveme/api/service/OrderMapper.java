@@ -5,14 +5,11 @@ import com.tcc.serveme.api.dto.OrderItemRequest;
 import com.tcc.serveme.api.model.Orders;
 import com.tcc.serveme.api.model.OrderItem;
 
-import java.util.List;
-
 public class OrderMapper {
-    public static Orders toModel(OrderRequest dto, List<OrderItem> items) {
+    public static Orders toModel(OrderRequest dto) {
         return new Orders(
             dto.tableNumber(),
-            dto.customerName(),
-            items
+            dto.customerName()
         );
     }
 
