@@ -11,13 +11,13 @@ public class Product {
     private Boolean inactive;
 
 
-    // Usado na inclusão de produto novo no banco de dados
-    public Product(Long categoryId, String name, String description, BigDecimal price) {
+    // Usado na inclusão de produto novo no banco de dados (não tem id ainda)
+    public Product(Long categoryId, String name, String description, BigDecimal price, Boolean inactive) {
         this.categoryId = categoryId;
         this.name = name;
         this.description = description;
         this.price = price;
-        this.inactive = false;
+        this.inactive = inactive;
     }
 
     // Usado para reconstrução a partir do banco de dados (construtor completo)

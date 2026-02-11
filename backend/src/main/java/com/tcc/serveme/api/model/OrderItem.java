@@ -16,13 +16,13 @@ public class OrderItem {
         this.notes = notes;
     }
 
-    // Usado na inclusão de itens no banco de dados
-    public OrderItem(Long orderId, Long productId, Integer quantity, String notes) {
+    // Usado na inclusão de itens no banco de dados (não tem id ainda)
+    public OrderItem(Long orderId, Long productId, Integer quantity, String notes, Boolean canceled) {
         this.orderId = orderId;
         this.productId = productId;
         this.quantity = quantity;
         this.notes = notes;
-        this.canceled = false;
+        this.canceled = canceled;
     }
 
     // Usado para reconstrução a partir do banco de dados (construtor completo)

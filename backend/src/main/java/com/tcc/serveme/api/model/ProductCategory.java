@@ -6,10 +6,10 @@ public class ProductCategory {
     private Boolean inactive;
 
 
-    // Usado na inclusão de categoria nova no banco de dados
-    public ProductCategory(String name) {
+    // Usado na inclusão de categoria nova no banco de dados (não tem id ainda)
+    public ProductCategory(String name, Boolean inactive) {
         this.name = name;
-        this.inactive = false;
+        this.inactive = inactive;
     }
 
     // Usado para reconstrução a partir do banco de dados (construtor completo)

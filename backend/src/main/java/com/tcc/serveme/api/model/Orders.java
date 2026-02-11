@@ -2,7 +2,6 @@ package com.tcc.serveme.api.model;
 
 import com.tcc.serveme.api.model.enums.OrderStatus;
 
-import java.util.List;
 import java.time.LocalDateTime;
 
 public class Orders {
@@ -13,12 +12,11 @@ public class Orders {
     private LocalDateTime createdAt;
 
 
-    // Usado na inclusão de pedidos no banco de dados
-    public Orders(Integer tableNumber, String customerName, List<OrderItem> items) {
+    // Construtor com apenas o necessário pelo input do front (dto)
+    public Orders(Integer tableNumber, String customerName) {
         this.tableNumber = tableNumber;
         this.customerName = customerName;
-        this.status = OrderStatus.PENDING;
-        this.createdAt = LocalDateTime.now();
+    }
     }
 
     // Usado para reconstrução a partir do banco de dados (construtor completo)
