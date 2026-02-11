@@ -32,7 +32,7 @@ public class OrderItemRepository {
 
     public List<OrderItem> findActiveOrderItemsByTableNumber(Integer tableNumber) {
         String sql = """
-                SELECT 
+                SELECT
                     oi.id,
                     oi.order_id,
                     oi.product_id,
