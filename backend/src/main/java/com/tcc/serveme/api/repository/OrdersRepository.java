@@ -41,7 +41,7 @@ public class OrdersRepository {
         return jdbc.query(sql, ROW_MAPPER);
     }
 
-    public Long save(Orders order) { // keyholder necessario para adicao de item em order nova
+    public Long save(Orders order) { // Keyholder necessário para adição de itens em pedidos novos
         String sql = """
                 INSERT INTO orders (table_number, customer_name, created_at, status)
                 VALUES (?, ?, ?, ?)
@@ -56,7 +56,7 @@ public class OrdersRepository {
             ps.setString(4, order.getStatus().name());
             return ps;
         }, keyHolder);
-        return keyHolder.getKey().longValue();
+        return keyHolder.getKeyAs(Long.class);
     }
 
     // ************************
