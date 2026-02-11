@@ -44,8 +44,7 @@ public class OrderItemRepository {
                 WHERE o.table_number = ?
                 AND o.status IN ('PENDING', 'IN_PROGRESS')
                 """;
-        List<OrderItem> items = jdbc.query(sql, ROW_MAPPER, tableNumber);
-        return items;
+        return jdbc.query(sql, ROW_MAPPER, tableNumber);
     }
 
     public List<OrderItem> findActiveOrderItemsByCustomerName(String customerName) {
@@ -63,8 +62,7 @@ public class OrderItemRepository {
                 AND o.status IN ('PENDING', 'IN_PROGRESS')
                 """;
         String searchPattern = "%" + customerName + "%";
-        List<OrderItem> items = jdbc.query(sql, ROW_MAPPER, searchPattern);
-        return items;
+        return jdbc.query(sql, ROW_MAPPER, searchPattern);
     }
 
     public int cancel(Long id) {

@@ -30,8 +30,7 @@ public class OrdersRepository {
                 FROM orders
                 WHERE id = ?
                 """;
-        Orders order = jdbc.queryForObject(sql, ROW_MAPPER, id);
-        return order;
+        return jdbc.queryForObject(sql, ROW_MAPPER, id);
     }
 
     public List<Orders> findAll() {
@@ -39,8 +38,7 @@ public class OrdersRepository {
                 SELECT id, table_number, customer_name, created_at, status
                 FROM orders
                 """;
-        List<Orders> orders = jdbc.query(sql, ROW_MAPPER);
-        return orders;
+        return jdbc.query(sql, ROW_MAPPER);
     }
 
     public Long save(Orders order) { // keyholder necessario para adicao de item em order nova

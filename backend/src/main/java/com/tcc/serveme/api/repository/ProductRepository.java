@@ -25,8 +25,7 @@ public class ProductRepository {
                 WHERE id = ?
                 AND inactive = FALSE
                 """;
-        Product product = jdbc.queryForObject(sql, ROW_MAPPER, id);
-        return product;
+        return jdbc.queryForObject(sql, ROW_MAPPER, id);
     }
 
     public List<Product> findAll() {
@@ -35,8 +34,7 @@ public class ProductRepository {
                 FROM product
                 WHERE inactive = FALSE
                 """;
-        List<Product> products = jdbc.query(sql, ROW_MAPPER);
-        return products;
+        return jdbc.query(sql, ROW_MAPPER);
     }
 
     public int save(Product product) {
@@ -75,8 +73,7 @@ public class ProductRepository {
                 FROM product
                 WHERE id = ?
                 """;
-        Product product = jdbc.queryForObject(sql, ROW_MAPPER, id);
-        return product;
+        return jdbc.queryForObject(sql, ROW_MAPPER, id);
     }
 
     public List<Product> findAllIncludingInactive() {
@@ -84,8 +81,7 @@ public class ProductRepository {
                 SELECT id, category_id, name, description, price, inactive
                 FROM product
                 """;
-        List<Product> products = jdbc.query(sql, ROW_MAPPER);
-        return products;
+        return jdbc.query(sql, ROW_MAPPER);
     }
 
     public List<Product> findByName(String keyword) {
