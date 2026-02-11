@@ -17,6 +17,13 @@ public class Orders {
         this.tableNumber = tableNumber;
         this.customerName = customerName;
     }
+
+    // Usado na inclusão de pedidos no banco de dados (não tem id ainda)
+    public Orders(Integer tableNumber, String customerName, OrderStatus status, LocalDateTime createdAt) {
+        this.tableNumber = tableNumber;
+        this.customerName = customerName;
+        this.status = status;
+        this.createdAt = createdAt;
     }
 
     // Usado para reconstrução a partir do banco de dados (construtor completo)
