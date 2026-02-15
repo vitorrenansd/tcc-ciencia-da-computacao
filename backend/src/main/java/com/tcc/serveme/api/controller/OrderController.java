@@ -20,7 +20,7 @@ public class OrderController {
         this.orderService = orderService;
     }
 
-    @PostMapping("/create")
+    @PostMapping("/new")
     public void newOrder(@RequestBody NewOrderRequest request) {
         orderService.createOrder(request);
     }
