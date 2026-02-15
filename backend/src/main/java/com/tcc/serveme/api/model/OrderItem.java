@@ -14,15 +14,16 @@ public class OrderItem {
         this.productId = productId;
         this.quantity = quantity;
         this.notes = notes;
+        this.canceled = Boolean.FALSE;
     }
 
     // Usado na inclusão de itens no banco de dados (não tem id ainda)
-    public OrderItem(Long orderId, Long productId, Integer quantity, String notes, Boolean canceled) {
+    public OrderItem(Long orderId, Long productId, Integer quantity, String notes) {
         this.orderId = orderId;
         this.productId = productId;
         this.quantity = quantity;
         this.notes = notes;
-        this.canceled = canceled;
+        this.canceled = Boolean.FALSE;
     }
 
     // Usado para reconstrução a partir do banco de dados (construtor completo)

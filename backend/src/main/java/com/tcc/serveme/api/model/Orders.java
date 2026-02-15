@@ -12,18 +12,12 @@ public class Orders {
     private LocalDateTime createdAt;
 
 
-    // Construtor com apenas o necessário pelo input do front (dto)
+    // Construtor com apenas o necessário pelo DTO
     public Orders(Integer tableNumber, String customerName) {
         this.tableNumber = tableNumber;
         this.customerName = customerName;
-    }
-
-    // Usado na inclusão de pedidos no banco de dados (não tem id ainda)
-    public Orders(Integer tableNumber, String customerName, OrderStatus status, LocalDateTime createdAt) {
-        this.tableNumber = tableNumber;
-        this.customerName = customerName;
-        this.status = status;
-        this.createdAt = createdAt;
+        this.status = OrderStatus.PENDING;
+        this.createdAt = LocalDateTime.now();
     }
 
     // Usado para reconstrução a partir do banco de dados (construtor completo)
