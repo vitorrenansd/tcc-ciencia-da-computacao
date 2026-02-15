@@ -1,8 +1,8 @@
-package com.tcc.serveme.api.dto;
+package com.tcc.serveme.api.dto.order;
 
 import java.time.LocalDateTime;
 
-public record OrderResponse(
+public record PendingOrdersResponse(
     Long id,
     Integer tableNumber,
     String customerName,

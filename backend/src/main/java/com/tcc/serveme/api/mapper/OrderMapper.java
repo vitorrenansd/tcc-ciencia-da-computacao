@@ -1,9 +1,9 @@
 package com.tcc.serveme.api.mapper;
 
-import com.tcc.serveme.api.dto.OrderRequest;
-import com.tcc.serveme.api.dto.OrderItemRequest;
-import com.tcc.serveme.api.dto.OrderResponse;
 import com.tcc.serveme.api.model.Orders;
+import com.tcc.serveme.api.dto.order.NewOrderRequest;
+import com.tcc.serveme.api.dto.order.OrderItemRequest;
+import com.tcc.serveme.api.dto.order.PendingOrdersResponse;
 import com.tcc.serveme.api.model.OrderItem;
 
 public class OrderMapper {
@@ -23,8 +23,8 @@ public class OrderMapper {
         );
     }
 
-    public static OrderResponse toResponse(Orders order) {
-        return new OrderResponse(
+    public static PendingOrdersResponse toResponse(Order order) {
+        return new PendingOrdersResponse(
                 order.getId(),
                 order.getTableNumber(),
                 order.getCustomerName(),

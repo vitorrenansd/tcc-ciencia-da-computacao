@@ -1,8 +1,8 @@
-package com.tcc.serveme.api.dto;
+package com.tcc.serveme.api.dto.order;
 
 import java.util.List;
 
-public record OrderRequest(
+public record NewOrderRequest(
     Integer tableNumber,
     String customerName,
     List<OrderItemRequest> items

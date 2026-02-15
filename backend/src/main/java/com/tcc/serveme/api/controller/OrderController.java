@@ -1,7 +1,7 @@
 package com.tcc.serveme.api.controller;
 
-import com.tcc.serveme.api.dto.OrderRequest;
-import com.tcc.serveme.api.dto.OrderResponse;
+import com.tcc.serveme.api.dto.order.NewOrderRequest;
+import com.tcc.serveme.api.dto.order.PendingOrdersResponse;
 import com.tcc.serveme.api.service.OrderService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,12 +21,12 @@ public class OrderController {
     }
 
     @PostMapping("/create")
-    public void send(@RequestBody OrderRequest request) {
+    public void newOrder(@RequestBody NewOrderRequest request) {
         orderService.createOrder(request);
     }
 
     @GetMapping("/pending")
-    public List<OrderResponse> getAllPendingOrders() {
+    public List<PendingOrdersResponse> getAllPendingOrders() {
         return orderService.getPendingOrders();
     }
 }

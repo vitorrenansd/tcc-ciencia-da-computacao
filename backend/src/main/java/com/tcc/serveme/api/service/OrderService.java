@@ -1,8 +1,8 @@
 package com.tcc.serveme.api.service;
 
-import com.tcc.serveme.api.dto.OrderRequest;
-import com.tcc.serveme.api.dto.OrderItemRequest;
-import com.tcc.serveme.api.dto.OrderResponse;
+import com.tcc.serveme.api.dto.order.NewOrderRequest;
+import com.tcc.serveme.api.dto.order.OrderItemRequest;
+import com.tcc.serveme.api.dto.order.PendingOrdersResponse;
 import com.tcc.serveme.api.mapper.OrderMapper;
 import com.tcc.serveme.api.model.Orders;
 import com.tcc.serveme.api.model.OrderItem;
@@ -28,8 +28,8 @@ public class OrderService {
 
 
     @Transactional
-    public void createOrder(OrderRequest request) {
         Orders order = OrderMapper.toModel(request);
+    public void createOrder(NewOrderRequest request) {
         Long orderId = ordersRepo.save(order);
 
         for (OrderItemRequest itemRequest : request.items()) {
@@ -38,7 +38,7 @@ public class OrderService {
         }
     }
 
-    public List<OrderResponse> getPendingOrders() {
+    public List<PendingOrdersResponse> getPendingOrders() {
         return ordersRepo.findAllPendingOrders()
                 .stream()
                 .map(OrderMapper::toResponse)
