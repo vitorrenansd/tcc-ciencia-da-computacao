@@ -2,9 +2,10 @@ package com.tcc.serveme.api.service;
 
 import com.tcc.serveme.api.dto.OrderRequest;
 import com.tcc.serveme.api.dto.OrderItemRequest;
+import com.tcc.serveme.api.dto.OrderResponse;
+import com.tcc.serveme.api.mapper.OrderMapper;
 import com.tcc.serveme.api.model.Orders;
 import com.tcc.serveme.api.model.OrderItem;
-import com.tcc.serveme.api.model.enums.OrderStatus;
 import com.tcc.serveme.api.repository.OrdersRepository;
 import com.tcc.serveme.api.repository.OrderItemRepository;
 
@@ -12,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class OrderService {
@@ -28,12 +29,19 @@ public class OrderService {
 
     @Transactional
     public void createOrder(OrderRequest request) {
-        Orders order = new Orders(request.tableNumber(), request.customerName(), OrderStatus.PENDING, LocalDateTime.now());
+        Orders order = OrderMapper.toModel(request);
         Long orderId = ordersRepo.save(order);
 
         for (OrderItemRequest itemRequest : request.items()) {
-            OrderItem item = new OrderItem(orderId, itemRequest.productId(), itemRequest.quantity(), itemRequest.notes(), Boolean.FALSE); // canceled = false
+            OrderItem item = OrderMapper.toModel(itemRequest, orderId);
             orderItemRepo.save(item);
         }
+    }
+
+    public List<OrderResponse> getPendingOrders() {
+        return ordersRepo.findAllPendingOrders()
+                .stream()
+                .map(OrderMapper::toResponse)
+                .toList();
     }
 }
