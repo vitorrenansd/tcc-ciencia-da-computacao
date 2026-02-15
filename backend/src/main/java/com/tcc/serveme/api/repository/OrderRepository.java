@@ -1,7 +1,7 @@
 package com.tcc.serveme.api.repository;
 
-import com.tcc.serveme.api.model.Orders;
-import com.tcc.serveme.api.repository.mapper.OrdersRowMapper;
+import com.tcc.serveme.api.model.Order;
+import com.tcc.serveme.api.repository.mapper.OrderRowMapper;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -15,16 +15,16 @@ import java.sql.Timestamp;
 import java.util.List;
 
 @Repository
-public class OrdersRepository {
+public class OrderRepository {
     private final JdbcTemplate jdbc;
-    private static final OrdersRowMapper ROW_MAPPER = new OrdersRowMapper();
+    private static final OrderRowMapper ROW_MAPPER = new OrderRowMapper();
 
     @Autowired
-    public OrdersRepository(JdbcTemplate jdbc) {
+    public OrderRepository(JdbcTemplate jdbc) {
         this.jdbc = jdbc;
     }
     
-    public Orders findById(Long id) {
+    public Order findById(Long id) {
         String sql = """
                 SELECT id, table_number, customer_name, created_at, status
                 FROM orders
@@ -33,7 +33,7 @@ public class OrdersRepository {
         return jdbc.queryForObject(sql, ROW_MAPPER, id);
     }
 
-    public List<Orders> findAll() {
+    public List<Order> findAll() {
         String sql = """
                 SELECT id, table_number, customer_name, created_at, status
                 FROM orders
@@ -41,7 +41,7 @@ public class OrdersRepository {
         return jdbc.query(sql, ROW_MAPPER);
     }
 
-    public Long save(Orders order) { // Keyholder necessário para adição de itens em pedidos novos
+    public Long save(Order order) { // Keyholder necessário para adição de itens em pedidos novos
         String sql = """
                 INSERT INTO orders (table_number, customer_name, created_at, status)
                 VALUES (?, ?, ?, ?)
@@ -63,7 +63,7 @@ public class OrdersRepository {
     //  Specific queries below
     // ************************
 
-    public List<Orders> findAllPendingOrders() {
+    public List<Order> findAllPendingOrders() {
         String sql = """
                 SELECT id, table_number, customer_name, created_at, status
                 FROM orders
@@ -72,7 +72,7 @@ public class OrdersRepository {
         return jdbc.query(sql, ROW_MAPPER);
     }
 
-    public List<Orders> findActiveOrdersByTableNumber(String tableNumber) {
+    public List<Order> findActiveOrdersByTableNumber(String tableNumber) {
         String sql = """
                 SELECT id, table_number, customer_name, created_at, status
                 FROM orders
@@ -83,7 +83,7 @@ public class OrdersRepository {
         return jdbc.query(sql, ROW_MAPPER, searchPattern);
     }
 
-    public List<Orders> findActiveOrdersByCustomerName(String keyword) {
+    public List<Order> findActiveOrdersByCustomerName(String keyword) {
         String sql = """
                 SELECT id, table_number, customer_name, created_at, status
                 FROM orders

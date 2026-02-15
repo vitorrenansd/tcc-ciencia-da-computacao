@@ -4,7 +4,7 @@ import com.tcc.serveme.api.model.enums.OrderStatus;
 
 import java.time.LocalDateTime;
 
-public class Orders {
+public class Order {
     private Long id;
     private Integer tableNumber;
     private String customerName;
@@ -13,7 +13,7 @@ public class Orders {
 
 
     // Construtor com apenas o necessário pelo DTO
-    public Orders(Integer tableNumber, String customerName) {
+    public Order(Integer tableNumber, String customerName) {
         this.tableNumber = tableNumber;
         this.customerName = customerName;
         this.status = OrderStatus.PENDING;
@@ -21,7 +21,7 @@ public class Orders {
     }
 
     // Usado para reconstrução a partir do banco de dados (construtor completo)
-    public Orders(Long id, Integer tableNumber, String customerName, OrderStatus status, LocalDateTime createdAt) {
+    public Order(Long id, Integer tableNumber, String customerName, OrderStatus status, LocalDateTime createdAt) {
         this.id = id;
         this.tableNumber = tableNumber;
         this.customerName = customerName;

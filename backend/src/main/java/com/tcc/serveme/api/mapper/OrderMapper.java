@@ -1,14 +1,14 @@
 package com.tcc.serveme.api.mapper;
 
-import com.tcc.serveme.api.model.Orders;
 import com.tcc.serveme.api.dto.order.NewOrderRequest;
 import com.tcc.serveme.api.dto.order.OrderItemRequest;
 import com.tcc.serveme.api.dto.order.PendingOrdersResponse;
+import com.tcc.serveme.api.model.Order;
 import com.tcc.serveme.api.model.OrderItem;
 
 public class OrderMapper {
-    public static Orders toModel(OrderRequest dto) {
-        return new Orders(
+    public static Order toModel(NewOrderRequest dto) {
+        return new Order(
             dto.tableNumber(),
             dto.customerName()
         );
