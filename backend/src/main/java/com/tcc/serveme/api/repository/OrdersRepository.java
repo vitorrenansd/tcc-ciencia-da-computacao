@@ -63,6 +63,15 @@ public class OrdersRepository {
     //  Specific queries below
     // ************************
 
+    public List<Orders> findAllPendingOrders() {
+        String sql = """
+                SELECT id, table_number, customer_name, created_at, status
+                FROM orders
+                WHERE status IN ('PENDING')
+                """;
+        return jdbc.query(sql, ROW_MAPPER);
+    }
+
     public List<Orders> findActiveOrdersByTableNumber(String tableNumber) {
         String sql = """
                 SELECT id, table_number, customer_name, created_at, status
