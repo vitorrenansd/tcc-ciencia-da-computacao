@@ -1,5 +1,6 @@
 package com.tcc.serveme.api.controller;
 
+import com.tcc.serveme.api.dto.product.NewProductRequest;
 import com.tcc.serveme.api.service.ProductService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,4 +17,8 @@ public class ProductController {
         this.productService = productService;
     }
 
+    @PostMapping("/new")
+    public void newProduct(@RequestBody NewProductRequest request) {
+        productService.createProduct(request);
+    }
 }
