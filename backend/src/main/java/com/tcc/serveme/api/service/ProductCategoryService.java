@@ -1,5 +1,7 @@
 package com.tcc.serveme.api.service;
 
+import com.tcc.serveme.api.dto.category.NewProductCategoryRequest;
+import com.tcc.serveme.api.mapper.ProductCategoryMapper;
 import com.tcc.serveme.api.model.ProductCategory;
 import com.tcc.serveme.api.repository.ProductCategoryRepository;
 
@@ -14,5 +16,11 @@ public class ProductCategoryService {
     @Autowired
     public ProductCategoryService(ProductCategoryRepository productCategoryRepo) {
         this.productCategoryRepo = productCategoryRepo;
+    }
+
+    @Transactional
+    public void createProductCategory(NewProductCategoryRequest request) {
+        ProductCategory productCategory = ProductCategoryMapper.toModel(request);
+        productCategoryRepo.save(productCategory);
     }
 }
