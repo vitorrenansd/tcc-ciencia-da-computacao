@@ -1,2 +1,2 @@
-INSERT INTO product_category (id, name, inactive) VALUES
-(1, 'GERAL', FALSE);
+INSERT INTO product_category (name, inactive) VALUES
+('GERAL', FALSE);
