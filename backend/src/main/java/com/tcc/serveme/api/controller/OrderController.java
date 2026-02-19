@@ -1,6 +1,7 @@
 package com.tcc.serveme.api.controller;
 
 import com.tcc.serveme.api.dto.order.NewOrderRequest;
+import com.tcc.serveme.api.dto.order.OrderDetailsResponse;
 import com.tcc.serveme.api.dto.order.PendingOrdersResponse;
 import com.tcc.serveme.api.service.OrderService;
 
@@ -32,5 +33,9 @@ public class OrderController {
     public ResponseEntity<List<PendingOrdersResponse>> getPending() {
         return ResponseEntity.ok(orderService.getPendingOrders());
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<OrderDetailsResponse> getById(@PathVariable Long id) {
+        return ResponseEntity.ok(orderService.findDetailsById(id));
     }
 }

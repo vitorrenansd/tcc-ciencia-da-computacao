@@ -32,7 +32,22 @@ public class OrderItemRepository {
     //  Specific queries below
     // ************************
 
+    public List<OrderItemResponse> findDetailedByOrderId(Long orderId) {
         String sql = """
+        SELECT
+            oi.id,
+            oi.product_id,
+            p.name AS product_name,
+            p.price,
+            oi.quantity,
+            oi.notes,
+            oi.canceled
+        FROM order_item oi
+        JOIN product p ON p.id = oi.product_id
+        WHERE oi.order_id = ?
+        """;
+
+        return jdbc.query(sql, new OrderItemResponseRowMapper(), orderId);
     }
 
     public List<OrderItem> findActiveOrderItemsByTableNumber(Integer tableNumber) {

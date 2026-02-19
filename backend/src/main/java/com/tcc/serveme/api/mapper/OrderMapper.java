@@ -1,10 +1,10 @@
 package com.tcc.serveme.api.mapper;
 
-import com.tcc.serveme.api.dto.order.NewOrderRequest;
-import com.tcc.serveme.api.dto.order.OrderItemRequest;
-import com.tcc.serveme.api.dto.order.PendingOrdersResponse;
+import com.tcc.serveme.api.dto.order.*;
 import com.tcc.serveme.api.model.Order;
 import com.tcc.serveme.api.model.OrderItem;
+
+import java.util.List;
 
 public class OrderMapper {
     public static Order toModel(NewOrderRequest dto) {
@@ -30,6 +30,17 @@ public class OrderMapper {
                 order.getCustomerName(),
                 order.getCreatedAt(),
                 order.getStatus().name()
+        );
+    }
+
+    public static OrderDetailsResponse toResponse(Order order, List<OrderItemResponse> items) {
+        return new OrderDetailsResponse(
+                order.getId(),
+                order.getTableNumber(),
+                order.getCustomerName(),
+                order.getStatus().name(),
+                order.getCreatedAt(),
+                items
         );
     }
 }

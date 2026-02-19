@@ -25,7 +25,7 @@ public class OrderService {
     }
 
     @Transactional
-    public void createOrder(NewOrderRequest request) {
+    public Long createOrder(NewOrderRequest request) {
         Order order = OrderMapper.toModel(request);
         Long orderId = orderRepo.save(order);
 
@@ -33,6 +33,7 @@ public class OrderService {
             OrderItem item = OrderMapper.toModel(itemRequest, orderId);
             orderItemRepo.save(item);
         }
+        return orderId;
     }
 
     public List<PendingOrdersResponse> getPendingOrders() {
@@ -40,5 +41,14 @@ public class OrderService {
                 .stream()
                 .map(OrderMapper::toResponse)
                 .toList();
+    }
+
+    public OrderDetailsResponse findDetailsById(Long id) {
+        Order order = orderRepo.findById(id);
+        if (order == null) {
+            throw new RuntimeException("Order not found");
+        }
+        List<OrderItemResponse> items = orderItemRepo.findDetailedByOrderId(id);
+        return OrderMapper.toResponse(order, items);
     }
 }
