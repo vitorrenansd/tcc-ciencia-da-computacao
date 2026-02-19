@@ -5,6 +5,8 @@ import com.tcc.serveme.api.dto.order.PendingOrdersResponse;
 import com.tcc.serveme.api.service.OrderService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,13 +22,15 @@ public class OrderController {
         this.orderService = orderService;
     }
 
-    @PostMapping("/new")
-    public void newOrder(@RequestBody NewOrderRequest request) {
-        orderService.createOrder(request);
+    @PostMapping
+    public ResponseEntity<Long> create(@RequestBody NewOrderRequest request) {
+        Long id = orderService.createOrder(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(id);
     }
 
     @GetMapping("/pending")
-    public List<PendingOrdersResponse> getAllPendingOrders() {
-        return orderService.getPendingOrders();
+    public ResponseEntity<List<PendingOrdersResponse>> getPending() {
+        return ResponseEntity.ok(orderService.getPendingOrders());
+    }
     }
 }
