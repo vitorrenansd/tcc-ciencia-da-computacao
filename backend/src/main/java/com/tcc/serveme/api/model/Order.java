@@ -54,8 +54,11 @@ public class Order {
     public void start() {
         this.status = OrderStatus.IN_PROGRESS;
     }
-    public void complete() {
-        this.status = OrderStatus.COMPLETED;
+    public void serve() {
+        this.status = OrderStatus.SERVED;
+    }
+    public void pay() {
+        this.status = OrderStatus.PAID;
     }
     public void cancel() {
         this.status = OrderStatus.CANCELED;

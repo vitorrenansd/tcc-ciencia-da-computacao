@@ -59,7 +59,7 @@ public class OrderItemRepository {
                 FROM order_item oi
                 INNER JOIN orders o ON o.id = oi.order_id
                 WHERE o.customer_name LIKE ?
-                AND o.status IN ('PENDING', 'IN_PROGRESS')
+                AND o.status IN ('PENDING', 'IN_PROGRESS', 'SERVED')
                 """;
         String searchPattern = "%" + customerName + "%";
         return jdbc.query(sql, ROW_MAPPER, searchPattern);
