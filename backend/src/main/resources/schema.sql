@@ -30,7 +30,7 @@ CREATE TABLE order_item (
     order_id BIGINT NOT NULL,
     product_id BIGINT NOT NULL,
     quantity INT NOT NULL CHECK (quantity > 0),
-    notes VARCHAR(80),
+    notes VARCHAR(40),
     canceled BOOLEAN DEFAULT FALSE,
 
     CONSTRAINT fk_order_item_orders
