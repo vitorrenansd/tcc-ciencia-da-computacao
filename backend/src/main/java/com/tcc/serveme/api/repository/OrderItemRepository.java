@@ -1,6 +1,8 @@
 package com.tcc.serveme.api.repository;
 
+import com.tcc.serveme.api.dto.order.OrderItemResponse;
 import com.tcc.serveme.api.model.OrderItem;
+import com.tcc.serveme.api.repository.mapper.OrderItemResponseRowMapper;
 import com.tcc.serveme.api.repository.mapper.OrderItemRowMapper;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +32,9 @@ public class OrderItemRepository {
     //  Specific queries below
     // ************************
 
+        String sql = """
+    }
+
     public List<OrderItem> findActiveOrderItemsByTableNumber(Integer tableNumber) {
         String sql = """
                 SELECT
@@ -42,27 +47,9 @@ public class OrderItemRepository {
                 FROM order_item oi
                 INNER JOIN orders o ON o.id = oi.order_id
                 WHERE o.table_number = ?
-                AND o.status IN ('PENDING', 'IN_PROGRESS')
-                """;
-        return jdbc.query(sql, ROW_MAPPER, tableNumber);
-    }
-
-    public List<OrderItem> findActiveOrderItemsByCustomerName(String customerName) {
-        String sql = """
-                SELECT
-                    oi.id,
-                    oi.order_id,
-                    oi.product_id,
-                    oi.quantity,
-                    oi.notes,
-                    oi.canceled
-                FROM order_item oi
-                INNER JOIN orders o ON o.id = oi.order_id
-                WHERE o.customer_name LIKE ?
                 AND o.status IN ('PENDING', 'IN_PROGRESS', 'SERVED')
                 """;
-        String searchPattern = "%" + customerName + "%";
-        return jdbc.query(sql, ROW_MAPPER, searchPattern);
+        return jdbc.query(sql, ROW_MAPPER, tableNumber);
     }
 
     public int cancel(Long id) {

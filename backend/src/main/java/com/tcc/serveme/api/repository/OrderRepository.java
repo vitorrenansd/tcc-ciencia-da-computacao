@@ -72,30 +72,12 @@ public class OrderRepository {
         return jdbc.query(sql, ROW_MAPPER);
     }
 
-    public List<Order> findActiveOrdersByTableNumber(String tableNumber) {
-        String sql = """
-                SELECT id, table_number, customer_name, created_at, status
-                FROM orders
-                WHERE table_number LIKE ?
-                AND status IN ('PENDING', 'IN_PROGRESS')
-                """;
-        String searchPattern = tableNumber + "%";
-        return jdbc.query(sql, ROW_MAPPER, searchPattern);
-    }
-
-    public List<Order> findActiveOrdersByCustomerName(String keyword) {
     public int markAsInProgress(Long id) {
         String sql = """
-                SELECT id, table_number, customer_name, created_at, status
-                FROM orders
-                WHERE customer_name LIKE ?
-                AND status IN ('PENDING', 'IN_PROGRESS')
                 UPDATE orders
                 SET status = 'IN_PROGRESS'
                 WHERE id = ?
                 """;
-        String searchPattern = "%" + keyword + "%";
-        return jdbc.query(sql, ROW_MAPPER, searchPattern);
         return jdbc.update(sql, id);
     }
 
