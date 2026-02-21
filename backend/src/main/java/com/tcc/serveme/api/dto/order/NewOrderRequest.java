@@ -5,5 +5,5 @@ import java.util.List;
 public record NewOrderRequest(
     Integer tableNumber,
     String customerName,
-    List<OrderItemRequest> items
+    List<NewOrderItemRequest> items
 ) {}

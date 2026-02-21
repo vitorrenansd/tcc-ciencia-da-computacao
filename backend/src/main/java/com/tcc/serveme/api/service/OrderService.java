@@ -52,7 +52,7 @@ public class OrderService {
         if (order == null) {
             throw new RuntimeException("Order not found");
         }
-        List<OrderItemResponse> items = orderItemRepo.findDetailedByOrderId(id);
+        List<OrderItemDetailsResponse> items = orderItemRepo.findDetailedByOrderId(id);
         return OrderMapper.toResponse(order, items);
     }
 }

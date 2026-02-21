@@ -2,7 +2,7 @@ package com.tcc.serveme.api.dto.order;
 
 import java.math.BigDecimal;
 
-public record OrderItemResponse(
+public record OrderItemDetailsResponse(
     Long id,
     Long productId,
     String productName,

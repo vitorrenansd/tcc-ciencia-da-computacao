@@ -1,6 +1,6 @@
 package com.tcc.serveme.api.repository;
 
-import com.tcc.serveme.api.dto.order.OrderItemResponse;
+import com.tcc.serveme.api.dto.order.OrderItemDetailsResponse;
 import com.tcc.serveme.api.model.OrderItem;
 import com.tcc.serveme.api.repository.mapper.OrderItemResponseRowMapper;
 import com.tcc.serveme.api.repository.mapper.OrderItemRowMapper;
@@ -32,7 +32,7 @@ public class OrderItemRepository {
     //  Specific queries below
     // ************************
 
-    public List<OrderItemResponse> findDetailedByOrderId(Long orderId) {
+    public List<OrderItemDetailsResponse> findDetailedByOrderId(Long orderId) {
         String sql = """
         SELECT
             oi.id,

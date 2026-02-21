@@ -9,5 +9,5 @@ public record OrderDetailsResponse(
     String customerName,
     String status,
     LocalDateTime createdAt,
-    List<OrderItemResponse> items
+    List<OrderItemDetailsResponse> items
 ) {}
