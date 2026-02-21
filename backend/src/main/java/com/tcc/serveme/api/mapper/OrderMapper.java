@@ -14,13 +14,6 @@ public class OrderMapper {
         );
     }
 
-    public static OrderItem toModel(OrderItemRequest dto, Long orderId) {
-        return new OrderItem(
-            orderId,
-            dto.productId(),
-            dto.quantity(),
-            dto.notes()
-        );
     }
 
     public static PendingOrdersResponse toResponse(Order order) {

@@ -22,10 +22,10 @@ public class OrderItemRepository {
 
     public int save(OrderItem orderItem) {
         String sql = """
-                INSERT INTO order_item (order_id, product_id, quantity, notes)
-                VALUES (?, ?, ?, ?)
+                INSERT INTO order_item (order_id, product_id, product_name, product_price, quantity, notes)
+                VALUES (?, ?, ?, ?, ?, ?)
                 """;
-        return jdbc.update(sql, orderItem.getOrderId(), orderItem.getProductId(), orderItem.getQuantity(), orderItem.getNotes());
+        return jdbc.update(sql, orderItem.getOrderId(), orderItem.getProductId(), orderItem.getProductName(), orderItem.getProductPrice(), orderItem.getQuantity(), orderItem.getNotes());
     }
     
     // ************************
@@ -38,7 +38,7 @@ public class OrderItemRepository {
             oi.id,
             oi.product_id,
             p.name AS product_name,
-            p.price,
+            p.price AS product_price,
             oi.quantity,
             oi.notes,
             oi.canceled
@@ -56,6 +56,8 @@ public class OrderItemRepository {
                     oi.id,
                     oi.order_id,
                     oi.product_id,
+                    oi.product_name
+                    oi.product_price
                     oi.quantity,
                     oi.notes,
                     oi.canceled

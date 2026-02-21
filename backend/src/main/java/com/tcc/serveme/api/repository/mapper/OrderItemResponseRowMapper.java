@@ -14,7 +14,7 @@ public class OrderItemResponseRowMapper implements RowMapper<OrderItemResponse> 
                 rs.getLong("id"),
                 rs.getLong("product_id"),
                 rs.getString("product_name"),
-                rs.getBigDecimal("price"),
+                rs.getBigDecimal("product_price"),
                 rs.getInt("quantity"),
                 rs.getString("notes"),
                 rs.getBoolean("canceled")

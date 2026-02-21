@@ -29,6 +29,8 @@ CREATE TABLE order_item (
     id IDENTITY PRIMARY KEY,
     order_id BIGINT NOT NULL,
     product_id BIGINT NOT NULL,
+    product_name VARCHAR(40) NOT NULL,
+    product_price NUMERIC(10,2) NOT NULL,
     quantity INT NOT NULL CHECK (quantity > 0),
     notes VARCHAR(40),
     canceled BOOLEAN DEFAULT FALSE,

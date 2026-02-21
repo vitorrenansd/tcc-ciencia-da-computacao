@@ -17,11 +17,14 @@ import java.util.List;
 public class OrderService {
     private final OrderRepository orderRepo;
     private final OrderItemRepository orderItemRepo;
+    private final ProductRepository productRepo;
 
     @Autowired
     public OrderService(OrderRepository orderRepo, OrderItemRepository orderItemRepo) {
+    public OrderService(OrderRepository orderRepo, OrderItemRepository orderItemRepo, ProductRepository productRepo) {
         this.orderRepo = orderRepo;
         this.orderItemRepo = orderItemRepo;
+        this.productRepo = productRepo;
     }
 
     @Transactional
@@ -30,7 +33,8 @@ public class OrderService {
         Long orderId = orderRepo.save(order);
 
         for (OrderItemRequest itemRequest : request.items()) {
-            OrderItem item = OrderMapper.toModel(itemRequest, orderId);
+            Product product = productRepo.findById(itemRequest.productId());
+            OrderItem item = new OrderItem(orderId, product.getId(), product.getName(), product.getPrice(), itemRequest.quantity(), itemRequest.notes());
             orderItemRepo.save(item);
         }
         return orderId;

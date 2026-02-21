@@ -6,7 +6,7 @@ public record OrderItemResponse(
     Long id,
     Long productId,
     String productName,
-    BigDecimal price,
+    BigDecimal productPrice,
     Integer quantity,
     String notes,
     Boolean canceled
