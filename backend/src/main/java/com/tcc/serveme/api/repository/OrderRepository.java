@@ -26,7 +26,7 @@ public class OrderRepository {
     
     public Order findById(Long id) {
         String sql = """
-                SELECT id, table_number, customer_name, created_at, status
+                SELECT id, table_number, customer_name, total_price, created_at, status
                 FROM orders
                 WHERE id = ?
                 """;
@@ -35,25 +35,27 @@ public class OrderRepository {
 
     public List<Order> findAll() {
         String sql = """
-                SELECT id, table_number, customer_name, created_at, status
+                SELECT id, table_number, customer_name, total_price, created_at, status
                 FROM orders
                 """;
         return jdbc.query(sql, ROW_MAPPER);
     }
 
-    public Long save(Order order) { // Keyholder necessário para adição de itens em pedidos novos
+    public Long save(Order order) {
         String sql = """
-                INSERT INTO orders (table_number, customer_name, created_at, status)
-                VALUES (?, ?, ?, ?)
+                INSERT INTO orders (table_number, customer_name, total_price, created_at, status)
+                VALUES (?, ?, ?, ?, ?)
                 """;
+        // Keyholder necessário para adição de itens em pedidos novos
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbc.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             ps.setInt(1, order.getTableNumber());
             ps.setString(2, order.getCustomerName());
-            ps.setTimestamp(3, Timestamp.valueOf(order.getCreatedAt()));
-            ps.setString(4, order.getStatus().name());
+            ps.setBigDecimal(3, order.getTotalPrice());
+            ps.setTimestamp(4, Timestamp.valueOf(order.getCreatedAt()));
+            ps.setString(5, order.getStatus().name());
             return ps;
         }, keyHolder);
         return keyHolder.getKeyAs(Long.class);
@@ -65,7 +67,7 @@ public class OrderRepository {
 
     public List<Order> findAllPendingOrders() {
         String sql = """
-                SELECT id, table_number, customer_name, created_at, status
+                SELECT id, table_number, customer_name, total_price, created_at, status
                 FROM orders
                 WHERE status IN ('PENDING')
                 """;

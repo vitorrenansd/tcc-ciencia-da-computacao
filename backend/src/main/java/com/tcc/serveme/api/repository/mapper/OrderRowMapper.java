@@ -15,6 +15,7 @@ public class OrderRowMapper implements RowMapper<Order> {
             rs.getLong("id"),
             rs.getInt("table_number"),
             rs.getString("customer_name"),
+            rs.getBigDecimal("total_price"),
             OrderStatus.valueOf(rs.getString("status")),
             rs.getTimestamp("created_at").toLocalDateTime()
         );

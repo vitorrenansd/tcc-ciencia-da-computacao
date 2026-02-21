@@ -2,29 +2,33 @@ package com.tcc.serveme.api.model;
 
 import com.tcc.serveme.api.model.enums.OrderStatus;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public class Order {
     private Long id;
     private Integer tableNumber;
     private String customerName;
+    private BigDecimal totalPrice;
     private OrderStatus status;
     private LocalDateTime createdAt;
 
 
-    // Construtor com apenas o necessário pelo DTO
-    public Order(Integer tableNumber, String customerName) {
+    // Construtor para adicao de pedido na DB
+    public Order(Integer tableNumber, String customerName, BigDecimal totalPrice) {
         this.tableNumber = tableNumber;
         this.customerName = customerName;
+        this.totalPrice = totalPrice;
         this.status = OrderStatus.PENDING;
         this.createdAt = LocalDateTime.now();
     }
 
     // Usado para reconstrução a partir do banco de dados (construtor completo)
-    public Order(Long id, Integer tableNumber, String customerName, OrderStatus status, LocalDateTime createdAt) {
+    public Order(Long id, Integer tableNumber, String customerName, BigDecimal totalPrice, OrderStatus status, LocalDateTime createdAt) {
         this.id = id;
         this.tableNumber = tableNumber;
         this.customerName = customerName;
+        this.totalPrice = totalPrice;
         this.status = status;
         this.createdAt = createdAt;
     }
@@ -40,6 +44,10 @@ public class Order {
 
     public String getCustomerName() {
         return this.customerName;
+    }
+
+    public BigDecimal getTotalPrice() {
+        return this.totalPrice;
     }
 
     public OrderStatus getStatus() {

@@ -21,6 +21,7 @@ CREATE TABLE orders (
     id IDENTITY PRIMARY KEY,
     table_number INT NOT NULL,
     customer_name VARCHAR(20) NOT NULL,
+    total_price NUMERIC(10,2) NOT NULL,
     status VARCHAR(20) DEFAULT 'PENDING',
     created_at TIMESTAMP NOT NULL
 );
