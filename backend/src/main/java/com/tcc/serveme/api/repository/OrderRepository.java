@@ -1,10 +1,11 @@
 package com.tcc.serveme.api.repository;
 
 import com.tcc.serveme.api.model.Order;
-import com.tcc.serveme.api.repository.mapper.OrderRowMapper;
+import com.tcc.serveme.api.model.enums.OrderStatus;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -17,7 +18,15 @@ import java.util.List;
 @Repository
 public class OrderRepository {
     private final JdbcTemplate jdbc;
-    private static final OrderRowMapper ROW_MAPPER = new OrderRowMapper();
+    private static final RowMapper<Order> ROW_MAPPER =
+            (rs, rowNum) -> new Order(
+                    rs.getLong("id"),
+                    rs.getInt("table_number"),
+                    rs.getString("customer_name"),
+                    rs.getBigDecimal("total_price"),
+                    OrderStatus.valueOf(rs.getString("status")),
+                    rs.getTimestamp("created_at").toLocalDateTime()
+            );
 
     @Autowired
     public OrderRepository(JdbcTemplate jdbc) {
@@ -26,7 +35,7 @@ public class OrderRepository {
     
     public Order findById(Long id) {
         String sql = """
-                SELECT id, table_number, customer_name, total_price, created_at, status
+                SELECT id, table_number, customer_name, total_price, status, created_at
                 FROM orders
                 WHERE id = ?
                 """;
@@ -35,7 +44,7 @@ public class OrderRepository {
 
     public List<Order> findAll() {
         String sql = """
-                SELECT id, table_number, customer_name, total_price, created_at, status
+                SELECT id, table_number, customer_name, total_price, status, created_at
                 FROM orders
                 """;
         return jdbc.query(sql, ROW_MAPPER);
@@ -43,7 +52,7 @@ public class OrderRepository {
 
     public Long save(Order order) {
         String sql = """
-                INSERT INTO orders (table_number, customer_name, total_price, created_at, status)
+                INSERT INTO orders (table_number, customer_name, total_price, status, created_at)
                 VALUES (?, ?, ?, ?, ?)
                 """;
         // Keyholder necessário para adição de itens em pedidos novos
@@ -54,8 +63,8 @@ public class OrderRepository {
             ps.setInt(1, order.getTableNumber());
             ps.setString(2, order.getCustomerName());
             ps.setBigDecimal(3, order.getTotalPrice());
-            ps.setTimestamp(4, Timestamp.valueOf(order.getCreatedAt()));
-            ps.setString(5, order.getStatus().name());
+            ps.setString(4, order.getStatus().name());
+            ps.setTimestamp(5, Timestamp.valueOf(order.getCreatedAt()));
             return ps;
         }, keyHolder);
         return keyHolder.getKeyAs(Long.class);
@@ -67,7 +76,7 @@ public class OrderRepository {
 
     public List<Order> findAllPendingOrders() {
         String sql = """
-                SELECT id, table_number, customer_name, total_price, created_at, status
+                SELECT id, table_number, customer_name, total_price, status, created_at
                 FROM orders
                 WHERE status IN ('PENDING')
                 """;

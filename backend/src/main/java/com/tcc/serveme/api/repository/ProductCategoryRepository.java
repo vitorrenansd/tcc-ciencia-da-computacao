@@ -1,17 +1,23 @@
 package com.tcc.serveme.api.repository;
 
 import com.tcc.serveme.api.model.ProductCategory;
-import com.tcc.serveme.api.repository.mapper.ProductCategoryRowMapper;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
+
 import java.util.List;
 
 @Repository
 public class ProductCategoryRepository {
     private final JdbcTemplate jdbc;
-    private static final ProductCategoryRowMapper ROW_MAPPER = new ProductCategoryRowMapper();
+    private static final RowMapper<ProductCategory> ROW_MAPPER =
+            (rs, rowNum) -> new ProductCategory(
+                    rs.getLong("id"),
+                    rs.getString("name"),
+                    rs.getBoolean("inactive")
+            );
 
     @Autowired
     public ProductCategoryRepository(JdbcTemplate jdbc) {
@@ -23,7 +29,6 @@ public class ProductCategoryRepository {
                 SELECT id, name, inactive
                 FROM product_category
                 WHERE id = ?
-                AND inactive = FALSE
                 """;
         return jdbc.queryForObject(sql, ROW_MAPPER, id);
     }
@@ -32,7 +37,6 @@ public class ProductCategoryRepository {
         String sql = """
                 SELECT id, name, inactive
                 FROM product_category
-                WHERE inactive = FALSE
                 """;
         return jdbc.query(sql, ROW_MAPPER);
     }
@@ -67,24 +71,16 @@ public class ProductCategoryRepository {
     //  Specific queries below
     // ************************
 
-    public ProductCategory findByIdIncludingInactive(Long id) {
+    public List<ProductCategory> findAllActive() {
         String sql = """
                 SELECT id, name, inactive
                 FROM product_category
-                WHERE id = ?
-                """;
-        return jdbc.queryForObject(sql, ROW_MAPPER, id);
-    }
-
-    public List<ProductCategory> findAllIncludingInactive() {
-        String sql = """
-                SELECT id, name, inactive
-                FROM product_category
+                WHERE inactive = FALSE
                 """;
         return jdbc.query(sql, ROW_MAPPER);
     }
 
-    public List<ProductCategory> findByName(String keyword) {
+    public List<ProductCategory> findByNameActive(String keyword) {
         String sql = """
                 SELECT id, name, inactive
                 FROM product_category

@@ -1,17 +1,25 @@
 package com.tcc.serveme.api.repository;
 
 import com.tcc.serveme.api.model.Product;
-import com.tcc.serveme.api.repository.mapper.ProductRowMapper;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
 public class ProductRepository {
     private final JdbcTemplate jdbc;
-    private static final ProductRowMapper ROW_MAPPER = new ProductRowMapper();
+    private static final RowMapper<Product> ROW_MAPPER =
+            (rs, rowNum) -> new Product(
+                    rs.getLong("id"),
+                    rs.getLong("category_id"),
+                    rs.getString("name"),
+                    rs.getString("description"),
+                    rs.getBigDecimal("price"),
+                    rs.getBoolean("inactive")
+            );
 
     @Autowired
     public ProductRepository(JdbcTemplate jdbc) {

@@ -2,18 +2,37 @@ package com.tcc.serveme.api.repository;
 
 import com.tcc.serveme.api.dto.order.OrderItemDetailsResponse;
 import com.tcc.serveme.api.model.OrderItem;
-import com.tcc.serveme.api.repository.mapper.OrderItemResponseRowMapper;
-import com.tcc.serveme.api.repository.mapper.OrderItemRowMapper;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
 public class OrderItemRepository {
     private final JdbcTemplate jdbc;
-    private static final OrderItemRowMapper ROW_MAPPER = new OrderItemRowMapper();
+    private static final RowMapper<OrderItem> ROW_MAPPER =
+            (rs, rowNum) -> new OrderItem(
+                    rs.getLong("id"),
+                    rs.getLong("order_id"),
+                    rs.getLong("product_id"),
+                    rs.getString("product_name"),
+                    rs.getBigDecimal("product_price"),
+                    rs.getInt("quantity"),
+                    rs.getString("notes"),
+                    rs.getBoolean("canceled")
+            );
+    private static final RowMapper<OrderItemDetailsResponse> DETAILS_ROW_MAPPER =
+            (rs, rowNum) -> new OrderItemDetailsResponse(
+                    rs.getLong("id"),
+                    rs.getLong("product_id"),
+                    rs.getString("product_name"),
+                    rs.getBigDecimal("product_price"),
+                    rs.getInt("quantity"),
+                    rs.getString("notes"),
+                    rs.getBoolean("canceled")
+            );
 
     @Autowired
     public OrderItemRepository(JdbcTemplate jdbc) {
@@ -35,19 +54,18 @@ public class OrderItemRepository {
     public List<OrderItemDetailsResponse> findDetailedByOrderId(Long orderId) {
         String sql = """
         SELECT
-            oi.id,
-            oi.product_id,
-            p.name AS product_name,
-            p.price AS product_price,
-            oi.quantity,
-            oi.notes,
-            oi.canceled
-        FROM order_item oi
-        JOIN product p ON p.id = oi.product_id
-        WHERE oi.order_id = ?
+            id,
+            product_id,
+            product_name,
+            product_price,
+            quantity,
+            notes,
+            canceled
+        FROM order_item
+        WHERE order_id = ?
         """;
 
-        return jdbc.query(sql, new OrderItemResponseRowMapper(), orderId);
+        return jdbc.query(sql, DETAILS_ROW_MAPPER, orderId);
     }
 
     public List<OrderItem> findActiveOrderItemsByTableNumber(Integer tableNumber) {
@@ -56,8 +74,8 @@ public class OrderItemRepository {
                     oi.id,
                     oi.order_id,
                     oi.product_id,
-                    oi.product_name
-                    oi.product_price
+                    oi.product_name,
+                    oi.product_price,
                     oi.quantity,
                     oi.notes,
                     oi.canceled
