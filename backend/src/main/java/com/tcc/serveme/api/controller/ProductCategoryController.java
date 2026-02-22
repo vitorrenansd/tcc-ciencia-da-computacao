@@ -1,12 +1,15 @@
 package com.tcc.serveme.api.controller;
 
 import com.tcc.serveme.api.dto.category.NewProductCategoryRequest;
+import com.tcc.serveme.api.dto.category.ProductCategoryResponse;
 import com.tcc.serveme.api.service.ProductCategoryService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/product-category")
@@ -23,5 +26,11 @@ public class ProductCategoryController {
     public ResponseEntity<Void> create(@RequestBody NewProductCategoryRequest request) {
         productCategoryService.createProductCategory(request);
         return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    @GetMapping("/active")
+    public ResponseEntity<List<ProductCategoryResponse>> getActiveCategories() {
+        List<ProductCategoryResponse> response = productCategoryService.getActiveCategories();
+        return ResponseEntity.ok(response);
     }
 }

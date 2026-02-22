@@ -12,6 +12,12 @@ public class ProductCategory {
         this.inactive = inactive;
     }
 
+    // Usado no request do front por categorias ativas
+    public ProductCategory(Long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
     // Usado para reconstrução a partir do banco de dados (construtor completo)
     public ProductCategory(Long id, String name, Boolean inactive) {
         this.id = id;

@@ -1,6 +1,7 @@
 package com.tcc.serveme.api.service;
 
 import com.tcc.serveme.api.dto.category.NewProductCategoryRequest;
+import com.tcc.serveme.api.dto.category.ProductCategoryResponse;
 import com.tcc.serveme.api.mapper.ProductCategoryMapper;
 import com.tcc.serveme.api.model.ProductCategory;
 import com.tcc.serveme.api.repository.ProductCategoryRepository;
@@ -8,6 +9,8 @@ import com.tcc.serveme.api.repository.ProductCategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 public class ProductCategoryService {
@@ -22,5 +25,12 @@ public class ProductCategoryService {
     public void createProductCategory(NewProductCategoryRequest request) {
         ProductCategory productCategory = ProductCategoryMapper.toModel(request);
         productCategoryRepo.save(productCategory);
+    }
+
+    public List<ProductCategoryResponse> getActiveCategories() {
+        return productCategoryRepo.findAllActive()
+                .stream()
+                .map(ProductCategoryMapper::toResponse)
+                .toList();
     }
 }
