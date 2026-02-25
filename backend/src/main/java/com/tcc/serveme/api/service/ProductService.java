@@ -25,9 +25,9 @@ public class ProductService {
         productRepo.save(product);
     }
 
-    public ProductDetailsResponse findDetailsById(Long id) {
+    public ProductDetailsResponse getDetailsById(Long id) {
         return productRepo.findByIdActive(id)
-                .map(ProductMapper::toResponse)
+                .map(ProductMapper::toDetailsResponse)
                 .orElse(null);
     }
 }
