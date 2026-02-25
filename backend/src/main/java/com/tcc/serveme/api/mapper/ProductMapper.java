@@ -1,6 +1,7 @@
 package com.tcc.serveme.api.mapper;
 
 import com.tcc.serveme.api.dto.product.NewProductRequest;
+import com.tcc.serveme.api.dto.product.ProductDetailsResponse;
 import com.tcc.serveme.api.model.Product;
 
 public class ProductMapper {
@@ -11,6 +12,14 @@ public class ProductMapper {
                 dto.description(),
                 dto.price(),
                 dto.inactive()
+        );
+    }
+
+    public static ProductDetailsResponse toResponse(Product product) {
+        return new ProductDetailsResponse(
+                product.getName(),
+                product.getDescription(),
+                product.getPrice()
         );
     }
 

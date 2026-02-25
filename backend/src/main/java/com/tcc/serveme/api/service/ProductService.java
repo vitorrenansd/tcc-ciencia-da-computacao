@@ -1,6 +1,7 @@
 package com.tcc.serveme.api.service;
 
 import com.tcc.serveme.api.dto.product.NewProductRequest;
+import com.tcc.serveme.api.dto.product.ProductDetailsResponse;
 import com.tcc.serveme.api.mapper.ProductMapper;
 import com.tcc.serveme.api.model.Product;
 import com.tcc.serveme.api.repository.ProductRepository;
@@ -22,5 +23,11 @@ public class ProductService {
     public void createProduct(NewProductRequest request) {
         Product product = ProductMapper.toModel(request);
         productRepo.save(product);
+    }
+
+    public ProductDetailsResponse findDetailsById(Long id) {
+        return productRepo.findByIdActive(id)
+                .map(ProductMapper::toResponse)
+                .orElse(null);
     }
 }

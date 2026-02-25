@@ -1,6 +1,7 @@
 package com.tcc.serveme.api.controller;
 
 import com.tcc.serveme.api.dto.product.NewProductRequest;
+import com.tcc.serveme.api.dto.product.ProductDetailsResponse;
 import com.tcc.serveme.api.service.ProductService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,5 +29,13 @@ public class ProductController {
             return ResponseEntity.badRequest().body(ex.getMessage());
         }
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ProductDetailsResponse> getById(@PathVariable Long id) {
+        ProductDetailsResponse response = productService.findDetailsById(id);
+        if (response == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(response);
     }
 }
