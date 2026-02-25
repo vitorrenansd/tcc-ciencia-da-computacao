@@ -106,7 +106,7 @@ public class ProductRepository {
         return jdbc.query(sql, ROW_MAPPER, searchPattern);
     }
 
-    public List<Product> findByCategory(Long categoryId) {
+    public List<Product> findAllActiveByCategory(Long categoryId) {
         String sql = """
                 SELECT id, category_id, name, description, price, inactive
                 FROM product
