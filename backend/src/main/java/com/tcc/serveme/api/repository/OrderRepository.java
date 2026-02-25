@@ -14,6 +14,7 @@ import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class OrderRepository {
@@ -33,13 +34,14 @@ public class OrderRepository {
         this.jdbc = jdbc;
     }
     
-    public Order findById(Long id) {
+    public Optional<Order> findById(Long id) {
         String sql = """
                 SELECT id, table_number, customer_name, total_price, status, created_at
                 FROM orders
                 WHERE id = ?
                 """;
-        return jdbc.queryForObject(sql, ROW_MAPPER, id);
+        List<Order> result = jdbc.query(sql, ROW_MAPPER, id);
+        return result.stream().findFirst();
     }
 
     public List<Order> findAll() {

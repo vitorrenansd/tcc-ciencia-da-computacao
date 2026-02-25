@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class ProductRepository {
@@ -26,21 +27,20 @@ public class ProductRepository {
         this.jdbc = jdbc;
     }
 
-    public Product findById(Long id) {
+    public Optional<Product> findById(Long id) {
         String sql = """
                 SELECT id, category_id, name, description, price, inactive
                 FROM product
                 WHERE id = ?
-                AND inactive = FALSE
                 """;
-        return jdbc.queryForObject(sql, ROW_MAPPER, id);
+        List<Product> result = jdbc.query(sql, ROW_MAPPER, id);
+        return result.stream().findFirst();
     }
 
     public List<Product> findAll() {
         String sql = """
                 SELECT id, category_id, name, description, price, inactive
                 FROM product
-                WHERE inactive = FALSE
                 """;
         return jdbc.query(sql, ROW_MAPPER);
     }
@@ -74,22 +74,16 @@ public class ProductRepository {
     // ************************
     //  Specific queries below
     // ************************
-    
-    public Product findByIdIncludingInactive(Long id) {
+
+    public Optional<Product> findByIdActive(Long id) {
         String sql = """
                 SELECT id, category_id, name, description, price, inactive
                 FROM product
                 WHERE id = ?
+                AND inactive = FALSE
                 """;
-        return jdbc.queryForObject(sql, ROW_MAPPER, id);
-    }
-
-    public List<Product> findAllIncludingInactive() {
-        String sql = """
-                SELECT id, category_id, name, description, price, inactive
-                FROM product
-                """;
-        return jdbc.query(sql, ROW_MAPPER);
+        List<Product> result = jdbc.query(sql, ROW_MAPPER, id);
+        return result.stream().findFirst();
     }
 
     public List<Product> findByName(String keyword) {

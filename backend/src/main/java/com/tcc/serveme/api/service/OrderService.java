@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -32,27 +33,39 @@ public class OrderService {
     @Transactional
     public Long createOrder(NewOrderRequest request) {
         BigDecimal total = BigDecimal.ZERO;
+        List<Product> products = new ArrayList<>();
 
-        // Loop para somar o total R$ dos itens
+        // Busca e valida todos os produtos
         for (NewOrderItemRequest itemRequest : request.items()) {
-            Product product = productRepo.findById(itemRequest.productId());
-            if (product == null) {
-                throw new RuntimeException("Product not found");
-            }
-            BigDecimal itemTotal = product.getPrice().multiply(BigDecimal.valueOf(itemRequest.quantity()));
+            Product product = productRepo.findByIdActive(itemRequest.productId())
+                    .orElseThrow(() -> new RuntimeException("Product not found or inactive. ID: " + itemRequest.productId()));
+
+            products.add(product);
+
+            BigDecimal itemTotal = product.getPrice()
+                    .multiply(BigDecimal.valueOf(itemRequest.quantity()));
             total = total.add(itemTotal);
         }
 
+        // Criacao do pedido em banco
         Order order = new Order(request.tableNumber(), request.customerName(), total);
         Long orderId = orderRepo.save(order);
 
-        // Loop de adicao de item a DB
-        for (NewOrderItemRequest itemRequest : request.items()) {
-            Product product = productRepo.findById(itemRequest.productId());
-            OrderItem item = new OrderItem(orderId, product.getId(), product.getName(), product.getPrice(), itemRequest.quantity(), itemRequest.notes());
+        // Loop de criacao dos itens no banco usando os produtos ja buscados
+        for (int i = 0; i < request.items().size(); i++) {
+            NewOrderItemRequest itemRequest = request.items().get(i);
+            Product product = products.get(i);
+
+            OrderItem item = new OrderItem(
+                    orderId,
+                    product.getId(),
+                    product.getName(),
+                    product.getPrice(),
+                    itemRequest.quantity(),
+                    itemRequest.notes()
+            );
             orderItemRepo.save(item);
         }
-
         return orderId;
     }
 
@@ -64,11 +77,13 @@ public class OrderService {
     }
 
     public OrderDetailsResponse findDetailsById(Long id) {
-        Order order = orderRepo.findById(id);
-        if (order == null) {
-            throw new RuntimeException("Order not found");
-        }
-        List<OrderItemDetailsResponse> items = orderItemRepo.findDetailedByOrderId(id);
-        return OrderMapper.toResponse(order, items);
+        // SE order existir, executa o map
+        // SE NAO existir, retorna null
+        return orderRepo.findById(id)
+                .map(order -> {
+                    List<OrderItemDetailsResponse> items = orderItemRepo.findDetailedByOrderId(id);
+                    return OrderMapper.toResponse(order, items);
+                })
+                .orElse(null);
     }
 }

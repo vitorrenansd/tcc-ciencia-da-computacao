@@ -23,9 +23,13 @@ public class ProductCategoryController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> create(@RequestBody NewProductCategoryRequest request) {
-        productCategoryService.createProductCategory(request);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+    public ResponseEntity<?> create(@RequestBody NewProductCategoryRequest request) {
+        try {
+            productCategoryService.createProductCategory(request);
+            return ResponseEntity.status(HttpStatus.CREATED).build();
+        } catch (Exception ex) {
+            return ResponseEntity.badRequest().body(ex.getMessage());
+        }
     }
 
     @GetMapping("/active")

@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class ProductCategoryRepository {
@@ -24,13 +25,14 @@ public class ProductCategoryRepository {
         this.jdbc = jdbc;
     }
 
-    public ProductCategory findById(Long id) {
+    public Optional<ProductCategory> findById(Long id) {
         String sql = """
                 SELECT id, name, inactive
                 FROM product_category
                 WHERE id = ?
                 """;
-        return jdbc.queryForObject(sql, ROW_MAPPER, id);
+        List<ProductCategory> result = jdbc.query(sql, ROW_MAPPER, id);
+        return result.stream().findFirst();
     }
 
     public List<ProductCategory> findAll() {

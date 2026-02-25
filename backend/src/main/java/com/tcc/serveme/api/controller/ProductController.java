@@ -20,8 +20,13 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> create(@RequestBody NewProductRequest request) {
-        productService.createProduct(request);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+    public ResponseEntity<?> create(@RequestBody NewProductRequest request) {
+        try {
+            productService.createProduct(request);
+            return ResponseEntity.status(HttpStatus.CREATED).build();
+        } catch (Exception ex) {
+            return ResponseEntity.badRequest().body(ex.getMessage());
+        }
+    }
     }
 }
