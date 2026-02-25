@@ -86,6 +86,15 @@ public class ProductRepository {
         return result.stream().findFirst();
     }
 
+    public List<Product> findAllActive() {
+        String sql = """
+                SELECT id, category_id, name, description, price, inactive
+                FROM product
+                WHERE inactive = FALSE
+                """;
+        return jdbc.query(sql, ROW_MAPPER);
+    }
+
     public List<Product> findByName(String keyword) {
         String sql = """
                 SELECT id, category_id, name, description, price, inactive
