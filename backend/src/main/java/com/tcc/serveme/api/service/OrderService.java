@@ -1,6 +1,7 @@
 package com.tcc.serveme.api.service;
 
 import com.tcc.serveme.api.dto.order.*;
+import com.tcc.serveme.api.mapper.OrderItemMapper;
 import com.tcc.serveme.api.mapper.OrderMapper;
 import com.tcc.serveme.api.model.Order;
 import com.tcc.serveme.api.model.OrderItem;
@@ -81,8 +82,12 @@ public class OrderService {
         // SE NAO existir, retorna null
         return orderRepo.findById(id)
                 .map(order -> {
-                    List<OrderItemDetailsResponse> items = orderItemRepo.findDetailedByOrderId(id);
-                    return OrderMapper.toResponse(order, items);
+                    List<OrderItemDetailsResponse> items = orderItemRepo
+                            .findByOrderId(id) // Busca os itens do pedido no repo
+                            .stream()
+                            .map(OrderItemMapper::toDetailsResponse) // Mapeia os itens para um DTO valido
+                            .toList();
+                    return OrderMapper.toDetailsResponse(order, items); // Retorna os dados do pedido + itens
                 })
                 .orElse(null);
     }

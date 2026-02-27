@@ -1,6 +1,5 @@
 package com.tcc.serveme.api.repository;
 
-import com.tcc.serveme.api.dto.order.OrderItemDetailsResponse;
 import com.tcc.serveme.api.model.OrderItem;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,16 +21,7 @@ public class OrderItemRepository {
                     rs.getInt("quantity"),
                     rs.getString("notes"),
                     rs.getBoolean("canceled")
-            );
-    private static final RowMapper<OrderItemDetailsResponse> DETAILS_ROW_MAPPER =
-            (rs, rowNum) -> new OrderItemDetailsResponse(
-                    rs.getLong("id"),
-                    rs.getLong("product_id"),
-                    rs.getString("product_name"),
-                    rs.getBigDecimal("product_price"),
-                    rs.getInt("quantity"),
-                    rs.getString("notes"),
-                    rs.getBoolean("canceled")
+                    // Caso adicionar novas colunas no banco, atualizar aqui
             );
 
     @Autowired
@@ -51,7 +41,7 @@ public class OrderItemRepository {
     //  Specific queries below
     // ************************
 
-    public List<OrderItemDetailsResponse> findDetailedByOrderId(Long orderId) {
+    public List<OrderItem> findByOrderId(Long orderId) {
         String sql = """
         SELECT
             id,
@@ -65,7 +55,7 @@ public class OrderItemRepository {
         WHERE order_id = ?
         """;
 
-        return jdbc.query(sql, DETAILS_ROW_MAPPER, orderId);
+        return jdbc.query(sql, ROW_MAPPER, orderId);
     }
 
     public List<OrderItem> findActiveOrderItemsByTableNumber(Integer tableNumber) {

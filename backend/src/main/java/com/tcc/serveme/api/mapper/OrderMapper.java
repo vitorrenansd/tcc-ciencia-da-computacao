@@ -2,7 +2,6 @@ package com.tcc.serveme.api.mapper;
 
 import com.tcc.serveme.api.dto.order.*;
 import com.tcc.serveme.api.model.Order;
-import com.tcc.serveme.api.model.OrderItem;
 
 import java.util.List;
 
@@ -19,7 +18,7 @@ public class OrderMapper {
         );
     }
 
-    public static OrderDetailsResponse toResponse(Order order, List<OrderItemDetailsResponse> items) {
+    public static OrderDetailsResponse toDetailsResponse(Order order, List<OrderItemDetailsResponse> items) {
         return new OrderDetailsResponse(
                 order.getId(),
                 order.getTableNumber(),
