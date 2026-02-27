@@ -27,6 +27,7 @@ public class OrderRepository {
                     rs.getBigDecimal("total_price"),
                     OrderStatus.valueOf(rs.getString("status")),
                     rs.getTimestamp("created_at").toLocalDateTime()
+                    // Caso adicionar novas colunas no banco, atualizar aqui
             );
 
     @Autowired

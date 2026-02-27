@@ -23,6 +23,7 @@ public class ProductController {
         this.productService = productService;
     }
 
+
     @PostMapping
     public ResponseEntity<?> create(@RequestBody NewProductRequest request) {
         try {

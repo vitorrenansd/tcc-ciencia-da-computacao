@@ -20,6 +20,7 @@ public class ProductRepository {
                     rs.getString("description"),
                     rs.getBigDecimal("price"),
                     rs.getBoolean("inactive")
+                    // Caso adicionar novas colunas na tabela, atualizar aqui
             );
 
     @Autowired

@@ -22,29 +22,34 @@ public class ProductService {
         this.productRepo = productRepo;
     }
 
+
+    // Cria produto novo no banco
     @Transactional
     public void createProduct(NewProductRequest request) {
         Product product = ProductMapper.toModel(request);
         productRepo.save(product);
     }
 
+    // Retorna os detalhes de um produto pelo ID do banco
     public ProductDetailsResponse getDetailsById(Long id) {
         return productRepo.findByIdActive(id)
-                .map(ProductMapper::toDetailsResponse)
-                .orElse(null);
+                .map(ProductMapper::toDetailsResponse)  // Mapeia o retorno do repo para um DTO valido
+                .orElse(null); // Retorna null caso não encontre o ID, trata na camada acima, evita exception
     }
 
+    // Retorna um List com todos os produtos ativos
     public List<ProductSummaryResponse> getAllActiveProducts() {
         return productRepo.findAllActive()
                 .stream()
-                .map(ProductMapper::toSummaryResponse)
+                .map(ProductMapper::toSummaryResponse)  // Mapeia o retorno do repo para um DTO valido
                 .toList();
     }
 
+    // Retorna um List com os produtos ativos da categoria
     public List<ProductSummaryResponse> getActiveProductsByCategory(Long categoryId) {
         return productRepo.findAllActiveByCategory(categoryId)
                 .stream()
-                .map(ProductMapper::toSummaryResponse)
+                .map(ProductMapper::toSummaryResponse)  // Mapeia o retorno do repo para um DTO valido
                 .toList();
     }
 }

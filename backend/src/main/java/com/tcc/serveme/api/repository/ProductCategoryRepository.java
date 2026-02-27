@@ -18,6 +18,7 @@ public class ProductCategoryRepository {
                     rs.getLong("id"),
                     rs.getString("name"),
                     rs.getBoolean("inactive")
+                    // Caso adicionar novas colunas no banco, atualizar aqui
             );
 
     @Autowired

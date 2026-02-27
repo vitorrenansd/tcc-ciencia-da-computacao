@@ -31,6 +31,8 @@ public class OrderService {
         this.productRepo = productRepo;
     }
 
+
+    // Cria pedido novo no banco
     @Transactional
     public Long createOrder(NewOrderRequest request) {
         BigDecimal total = BigDecimal.ZERO;
@@ -48,11 +50,11 @@ public class OrderService {
             total = total.add(itemTotal);
         }
 
-        // Criacao do pedido em banco
+        // Criação do pedido em banco
         Order order = new Order(request.tableNumber(), request.customerName(), total);
         Long orderId = orderRepo.save(order);
 
-        // Loop de criacao dos itens no banco usando os produtos ja buscados
+        // Loop de criação dos itens no banco usando os produtos ja buscados
         for (int i = 0; i < request.items().size(); i++) {
             NewOrderItemRequest itemRequest = request.items().get(i);
             Product product = products.get(i);
@@ -70,16 +72,16 @@ public class OrderService {
         return orderId;
     }
 
+    // Retorna um List com todos os pedidos de status PENDING
     public List<PendingOrdersResponse> getPendingOrders() {
         return orderRepo.findAllPendingOrders()
                 .stream()
-                .map(OrderMapper::toResponse)
+                .map(OrderMapper::toResponse) // Mapeia o retorno do repo para um DTO valido
                 .toList();
     }
 
+    // Retorna os detalhes de um pedido (com itens) pelo ID
     public OrderDetailsResponse findDetailsById(Long id) {
-        // SE order existir, executa o map
-        // SE NAO existir, retorna null
         return orderRepo.findById(id)
                 .map(order -> {
                     List<OrderItemDetailsResponse> items = orderItemRepo
@@ -89,6 +91,6 @@ public class OrderService {
                             .toList();
                     return OrderMapper.toDetailsResponse(order, items); // Retorna os dados do pedido + itens
                 })
-                .orElse(null);
+                .orElse(null); // Se não encontrar o pedido, retorna null. Será tratado na camada acima
     }
 }

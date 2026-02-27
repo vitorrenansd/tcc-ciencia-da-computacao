@@ -21,16 +21,19 @@ public class ProductCategoryService {
         this.productCategoryRepo = productCategoryRepo;
     }
 
+
+    // Cria categoria de produto nova no banco
     @Transactional
     public void createProductCategory(NewProductCategoryRequest request) {
         ProductCategory productCategory = ProductCategoryMapper.toModel(request);
         productCategoryRepo.save(productCategory);
     }
 
+    // Retorna um List com todas as categorias marcadas inactive = FALSE
     public List<ProductCategoryResponse> getActiveCategories() {
         return productCategoryRepo.findAllActive()
                 .stream()
-                .map(ProductCategoryMapper::toResponse)
+                .map(ProductCategoryMapper::toResponse) // Mapeia o retorno do repo para um DTO valido
                 .toList();
     }
 }
