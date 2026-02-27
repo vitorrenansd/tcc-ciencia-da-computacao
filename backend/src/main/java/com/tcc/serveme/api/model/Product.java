@@ -54,4 +54,9 @@ public class Product {
     public Boolean isInactive() {
         return this.inactive;
     }
+
+
+    public void markAsInactive() {
+        this.inactive = Boolean.TRUE;
+    }
 }

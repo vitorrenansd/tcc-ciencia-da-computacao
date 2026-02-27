@@ -71,6 +71,6 @@ public class OrderItem {
 
     
     public void markAsCanceled() {
-        this.canceled = true;
+        this.canceled = Boolean.TRUE;
     }
 }
