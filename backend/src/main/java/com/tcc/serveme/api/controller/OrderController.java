@@ -26,12 +26,9 @@ public class OrderController {
 
     @PostMapping
     public ResponseEntity<?> create(@RequestBody NewOrderRequest request) {
-        try {
-            Long id = orderService.createOrder(request);
-            return ResponseEntity.status(HttpStatus.CREATED).body(id);
-        } catch (RuntimeException ex) {
-            return ResponseEntity.badRequest().body(ex.getMessage());
-        }
+        Long id = orderService.createOrder(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(id);
+
     }
 
     @GetMapping("/pending")
@@ -42,9 +39,6 @@ public class OrderController {
     @GetMapping("/{id}")
     public ResponseEntity<OrderDetailsResponse> getById(@PathVariable Long id) {
         OrderDetailsResponse response = orderService.findDetailsById(id);
-        if (response == null) {
-            return ResponseEntity.notFound().build();
-        }
         return ResponseEntity.ok(response);
     }
 }

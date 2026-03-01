@@ -7,8 +7,10 @@ import com.tcc.serveme.api.model.ProductCategory;
 import com.tcc.serveme.api.repository.ProductCategoryRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -25,6 +27,9 @@ public class ProductCategoryService {
     // Cria categoria de produto nova no banco
     @Transactional
     public void createProductCategory(NewProductCategoryRequest request) {
+        if (request.name() == null || request.name().isBlank()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Nome da categoria é obrigatório");
+        }
         ProductCategory productCategory = ProductCategoryMapper.toModel(request);
         productCategoryRepo.save(productCategory);
     }

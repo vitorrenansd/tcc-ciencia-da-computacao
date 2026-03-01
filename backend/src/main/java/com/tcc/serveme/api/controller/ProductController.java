@@ -26,12 +26,8 @@ public class ProductController {
 
     @PostMapping
     public ResponseEntity<?> create(@RequestBody NewProductRequest request) {
-        try {
             productService.createProduct(request);
             return ResponseEntity.status(HttpStatus.CREATED).build();
-        } catch (Exception ex) {
-            return ResponseEntity.badRequest().body(ex.getMessage());
-        }
     }
 
     @GetMapping
@@ -47,9 +43,6 @@ public class ProductController {
     @GetMapping("/{id}")
     public ResponseEntity<ProductDetailsResponse> getById(@PathVariable Long id) {
         ProductDetailsResponse response = productService.getDetailsById(id);
-        if (response == null) {
-            return ResponseEntity.notFound().build();
-        }
         return ResponseEntity.ok(response);
     }
 }
