@@ -46,6 +46,7 @@ public class OrderItemRepository {
         String sql = """
         SELECT
             id,
+            order_id,
             product_id,
             product_name,
             product_price,

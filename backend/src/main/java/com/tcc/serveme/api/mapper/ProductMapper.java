@@ -16,12 +16,15 @@ public class ProductMapper {
         );
     }
 
-    public static ProductDetailsResponse toDetailsResponse(Product product) {
+    public static ProductDetailsResponse toDetailsResponse(Product product, String categoryName) {
         return new ProductDetailsResponse(
                 product.getId(),
+                product.getCategoryId(),
+                categoryName,
                 product.getName(),
                 product.getDescription(),
-                product.getPrice()
+                product.getPrice(),
+                product.isInactive()
         );
     }
 
