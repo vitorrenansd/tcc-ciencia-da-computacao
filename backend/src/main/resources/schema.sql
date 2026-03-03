@@ -4,6 +4,13 @@ CREATE TABLE product_category (
     inactive BOOLEAN DEFAULT FALSE
 );
 
+CREATE TABLE cash_shift (
+    id IDENTITY PRIMARY KEY,
+    opened_at TIMESTAMP(0) NOT NULL,
+    closed_at TIMESTAMP(0) NULL,
+    status VARCHAR(20) NOT NULL
+);
+
 CREATE TABLE product (
     id IDENTITY PRIMARY KEY,
     category_id BIGINT NOT NULL,
@@ -19,11 +26,16 @@ CREATE TABLE product (
 
 CREATE TABLE orders (
     id IDENTITY PRIMARY KEY,
+    cash_shift_id BIGINT NOT NULL,
     table_number INT NOT NULL,
     customer_name VARCHAR(20) NOT NULL,
     total_price NUMERIC(10,2) NOT NULL,
     status VARCHAR(20) DEFAULT 'PENDING',
-    created_at TIMESTAMP NOT NULL
+    created_at TIMESTAMP(0) NOT NULL,
+
+    CONSTRAINT fk_orders_cash_shift
+        FOREIGN KEY (cash_shift_id)
+        REFERENCES cash_shift(id)
 );
 
 CREATE TABLE order_item (
