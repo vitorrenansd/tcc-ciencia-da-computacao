@@ -23,6 +23,7 @@ public class CashShiftService {
     }
 
 
+    // Abertura de caixa novo
     @Transactional
     public Long createCashSession() {
         if (cashShiftRepo.findOpenShift().isPresent()) {
@@ -31,6 +32,7 @@ public class CashShiftService {
         return cashShiftRepo.openShift(LocalDateTime.now());
     }
 
+    // Fechamento do caixa atual
     @Transactional
     public void closeSession(Long id) {
         CashShift session = cashShiftRepo.findById(id)
@@ -43,12 +45,14 @@ public class CashShiftService {
         cashShiftRepo.closeShift(id, LocalDateTime.now());
     }
 
+    // Retorna os detalhes de um caixa pelo ID
     public CashShiftDetailsResponse getDetailsById(Long id) {
         return cashShiftRepo.findById(id)
                 .map(CashShiftMapper::toDetailsResponse)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Sessão de caixa não encontrada. ID: " + id));
     }
 
+    // Retorna o caixa aberto neste momento
     public CashShiftDetailsResponse getOpenSession() {
         return cashShiftRepo.findOpenShift()
                 .map(CashShiftMapper::toDetailsResponse)
