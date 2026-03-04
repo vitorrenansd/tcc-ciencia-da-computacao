@@ -89,6 +89,46 @@ public class OrderRepository {
         return jdbc.query(sql, ROW_MAPPER, cashShiftId);
     }
 
+    public List<Order> findAllInProgressByShiftId(Long cashShiftId) {
+        String sql = """
+                SELECT id, cash_shift_id, table_number, customer_name, total_price, status, created_at
+                FROM orders
+                WHERE cash_shift_id = ?
+                AND status IN ('IN_PROGRESS')
+                """;
+        return jdbc.query(sql, ROW_MAPPER, cashShiftId);
+    }
+
+    public List<Order> findAllServedByShiftId(Long cashShiftId) {
+        String sql = """
+                SELECT id, cash_shift_id, table_number, customer_name, total_price, status, created_at
+                FROM orders
+                WHERE cash_shift_id = ?
+                AND status IN ('SERVED')
+                """;
+        return jdbc.query(sql, ROW_MAPPER, cashShiftId);
+    }
+
+    public List<Order> findAllPaidByShiftId(Long cashShiftId) {
+        String sql = """
+                SELECT id, cash_shift_id, table_number, customer_name, total_price, status, created_at
+                FROM orders
+                WHERE cash_shift_id = ?
+                AND status IN ('PAID')
+                """;
+        return jdbc.query(sql, ROW_MAPPER, cashShiftId);
+    }
+
+    public List<Order> findAllCanceledByShiftId(Long cashShiftId) {
+        String sql = """
+                SELECT id, cash_shift_id, table_number, customer_name, total_price, status, created_at
+                FROM orders
+                WHERE cash_shift_id = ?
+                AND status IN ('CANCELED')
+                """;
+        return jdbc.query(sql, ROW_MAPPER, cashShiftId);
+    }
+
     public int markAsInProgress(Long id) {
         String sql = """
                 UPDATE orders
