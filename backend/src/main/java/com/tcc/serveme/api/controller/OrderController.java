@@ -2,7 +2,7 @@ package com.tcc.serveme.api.controller;
 
 import com.tcc.serveme.api.dto.order.NewOrderRequest;
 import com.tcc.serveme.api.dto.order.OrderDetailsResponse;
-import com.tcc.serveme.api.dto.order.PendingOrdersResponse;
+import com.tcc.serveme.api.dto.order.OrdersByStatusResponse;
 import com.tcc.serveme.api.service.OrderService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,8 +31,28 @@ public class OrderController {
     }
 
     @GetMapping("/pending")
-    public ResponseEntity<List<PendingOrdersResponse>> getPending() {
+    public ResponseEntity<List<OrdersByStatusResponse>> getPending() {
         return ResponseEntity.ok(orderService.getPendingOrders());
+    }
+
+    @GetMapping("/in-progress")
+    public ResponseEntity<List<OrdersByStatusResponse>> getInProgress() {
+        return ResponseEntity.ok(orderService.getOrdersInProgress());
+    }
+
+    @GetMapping("/served")
+    public ResponseEntity<List<OrdersByStatusResponse>> getServed() {
+        return ResponseEntity.ok(orderService.getServedOrders());
+    }
+
+    @GetMapping("/paid")
+    public ResponseEntity<List<OrdersByStatusResponse>> getPaid() {
+        return ResponseEntity.ok(orderService.getPaidOrders());
+    }
+
+    @GetMapping("/canceled")
+    public ResponseEntity<List<OrdersByStatusResponse>> getCanceled() {
+        return ResponseEntity.ok(orderService.getCanceledOrders());
     }
 
     @GetMapping("/{id}")
