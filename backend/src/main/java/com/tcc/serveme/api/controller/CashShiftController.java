@@ -16,4 +16,29 @@ public class CashShiftController {
     public CashShiftController(CashShiftService cashShiftService) {
         this.cashShiftService = cashShiftService;
     }
+
+
+    @PostMapping
+    public ResponseEntity<?> open() {
+        Long id = cashShiftService.createCashSession();
+        return ResponseEntity.status(HttpStatus.CREATED).body(id);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<CashShiftDetailsResponse> getById(@PathVariable Long id) {
+        CashShiftDetailsResponse response = cashShiftService.getDetailsById(id);
+        return ResponseEntity.ok(response);
+    }
+
+    @PutMapping("/{id}/close")
+    public ResponseEntity<Void> close(@PathVariable Long id) {
+        cashShiftService.closeSession(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/open")
+    public ResponseEntity<CashShiftDetailsResponse> getOpenSession() {
+        CashShiftDetailsResponse response = cashShiftService.getOpenSession();
+        return ResponseEntity.ok(response);
+    }
 }
