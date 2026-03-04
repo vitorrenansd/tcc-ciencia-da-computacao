@@ -28,7 +28,6 @@ public class OrderController {
     public ResponseEntity<?> create(@RequestBody NewOrderRequest request) {
         Long id = orderService.createOrder(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(id);
-
     }
 
     @GetMapping("/pending")

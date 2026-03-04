@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 
 public class Order {
     private Long id;
+    private Long cashShiftId;
     private Integer tableNumber;
     private String customerName;
     private BigDecimal totalPrice;
@@ -15,7 +16,8 @@ public class Order {
 
 
     // Construtor para adicao de pedido na DB
-    public Order(Integer tableNumber, String customerName, BigDecimal totalPrice) {
+    public Order(Long cashShiftId, Integer tableNumber, String customerName, BigDecimal totalPrice) {
+        this.cashShiftId = cashShiftId;
         this.tableNumber = tableNumber;
         this.customerName = customerName;
         this.totalPrice = totalPrice;
@@ -24,8 +26,9 @@ public class Order {
     }
 
     // Usado para reconstrução a partir do banco de dados (construtor completo)
-    public Order(Long id, Integer tableNumber, String customerName, BigDecimal totalPrice, OrderStatus status, LocalDateTime createdAt) {
+    public Order(Long id, Long cashShiftId, Integer tableNumber, String customerName, BigDecimal totalPrice, OrderStatus status, LocalDateTime createdAt) {
         this.id = id;
+        this.cashShiftId = cashShiftId;
         this.tableNumber = tableNumber;
         this.customerName = customerName;
         this.totalPrice = totalPrice;
@@ -36,6 +39,10 @@ public class Order {
 
     public Long getId() {
         return this.id;
+    }
+
+    public Long getCashShiftId() {
+        return this.cashShiftId;
     }
 
     public Integer getTableNumber() {
