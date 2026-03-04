@@ -7,14 +7,13 @@ import java.util.List;
 
 public class OrderMapper {
 
-    public static PendingOrdersResponse toResponse(Order order) {
-        return new PendingOrdersResponse(
+    public static OrdersByStatusResponse toOrdersByStatus(Order order) {
+        return new OrdersByStatusResponse(
                 order.getId(),
                 order.getTableNumber(),
                 order.getCustomerName(),
                 order.getTotalPrice(),
-                order.getCreatedAt(),
-                order.getStatus().name()
+                order.getCreatedAt()
         );
     }
 
