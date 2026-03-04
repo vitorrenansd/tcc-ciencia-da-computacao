@@ -82,12 +82,48 @@ public class OrderService {
     }
 
     // Retorna um List com todos os pedidos de status PENDING
-    public List<PendingOrdersResponse> getPendingOrders() {
+    public List<OrdersByStatusResponse> getPendingOrders() {
         CashShift openShift = cashShiftRepo.findOpenShift()
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.CONFLICT, "Sem caixa aberto, impossível visualizar pedidos pendentes."));
         return orderRepo.findAllPendingByShiftId(openShift.getId())
                 .stream()
-                .map(OrderMapper::toResponse) // Mapeia o retorno do repo para um DTO valido
+                .map(OrderMapper::toOrdersByStatus) // Mapeia o retorno do repo para um DTO valido
+                .toList();
+    }
+
+    public List<OrdersByStatusResponse> getOrdersInProgress() {
+        CashShift openShift = cashShiftRepo.findOpenShift()
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.CONFLICT, "Sem caixa aberto, impossível visualizar pedidos em progresso."));
+        return orderRepo.findAllInProgressByShiftId(openShift.getId())
+                .stream()
+                .map(OrderMapper::toOrdersByStatus) // Mapeia o retorno do repo para um DTO valido
+                .toList();
+    }
+
+    public List<OrdersByStatusResponse> getServedOrders() {
+        CashShift openShift = cashShiftRepo.findOpenShift()
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.CONFLICT, "Sem caixa aberto, impossível visualizar pedidos servidos."));
+        return orderRepo.findAllServedByShiftId(openShift.getId())
+                .stream()
+                .map(OrderMapper::toOrdersByStatus) // Mapeia o retorno do repo para um DTO valido
+                .toList();
+    }
+
+    public List<OrdersByStatusResponse> getPaidOrders() {
+        CashShift openShift = cashShiftRepo.findOpenShift()
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.CONFLICT, "Sem caixa aberto, impossível visualizar pedidos pagos."));
+        return orderRepo.findAllPaidByShiftId(openShift.getId())
+                .stream()
+                .map(OrderMapper::toOrdersByStatus) // Mapeia o retorno do repo para um DTO valido
+                .toList();
+    }
+
+    public List<OrdersByStatusResponse> getCanceledOrders() {
+        CashShift openShift = cashShiftRepo.findOpenShift()
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.CONFLICT, "Sem caixa aberto, impossível visualizar pedidos cancelados."));
+        return orderRepo.findAllCanceledByShiftId(openShift.getId())
+                .stream()
+                .map(OrderMapper::toOrdersByStatus) // Mapeia o retorno do repo para um DTO valido
                 .toList();
     }
 
