@@ -21,6 +21,7 @@ public class OrderMapper {
     public static OrderDetailsResponse toDetailsResponse(Order order, List<OrderItemDetailsResponse> items) {
         return new OrderDetailsResponse(
                 order.getId(),
+                order.getCashShiftId(),
                 order.getTableNumber(),
                 order.getCustomerName(),
                 order.getTotalPrice(),

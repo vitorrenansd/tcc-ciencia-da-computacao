@@ -22,6 +22,7 @@ public class OrderRepository {
     private static final RowMapper<Order> ROW_MAPPER =
             (rs, rowNum) -> new Order(
                     rs.getLong("id"),
+                    rs.getLong("cash_shift_id"),
                     rs.getInt("table_number"),
                     rs.getString("customer_name"),
                     rs.getBigDecimal("total_price"),
@@ -37,7 +38,7 @@ public class OrderRepository {
     
     public Optional<Order> findById(Long id) {
         String sql = """
-                SELECT id, table_number, customer_name, total_price, status, created_at
+                SELECT id, cash_shift_id, table_number, customer_name, total_price, status, created_at
                 FROM orders
                 WHERE id = ?
                 """;
@@ -47,7 +48,7 @@ public class OrderRepository {
 
     public List<Order> findAll() {
         String sql = """
-                SELECT id, table_number, customer_name, total_price, status, created_at
+                SELECT id, cash_shift_id, table_number, customer_name, total_price, status, created_at
                 FROM orders
                 """;
         return jdbc.query(sql, ROW_MAPPER);
@@ -55,19 +56,20 @@ public class OrderRepository {
 
     public Long save(Order order) {
         String sql = """
-                INSERT INTO orders (table_number, customer_name, total_price, status, created_at)
-                VALUES (?, ?, ?, ?, ?)
+                INSERT INTO orders (cash_shift_id, table_number, customer_name, total_price, status, created_at)
+                VALUES (?, ?, ?, ?, ?, ?)
                 """;
         // Keyholder necessário para adição de itens em pedidos novos
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbc.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            ps.setInt(1, order.getTableNumber());
-            ps.setString(2, order.getCustomerName());
-            ps.setBigDecimal(3, order.getTotalPrice());
-            ps.setString(4, order.getStatus().name());
-            ps.setTimestamp(5, Timestamp.valueOf(order.getCreatedAt()));
+            ps.setLong(1 ,order.getCashShiftId());
+            ps.setInt(2, order.getTableNumber());
+            ps.setString(3, order.getCustomerName());
+            ps.setBigDecimal(4, order.getTotalPrice());
+            ps.setString(5, order.getStatus().name());
+            ps.setTimestamp(6, Timestamp.valueOf(order.getCreatedAt()));
             return ps;
         }, keyHolder);
         return keyHolder.getKeyAs(Long.class);
@@ -77,13 +79,14 @@ public class OrderRepository {
     //  Specific queries below
     // ************************
 
-    public List<Order> findAllPendingOrders() {
+    public List<Order> findAllPendingByShiftId(Long cashShiftId) {
         String sql = """
-                SELECT id, table_number, customer_name, total_price, status, created_at
+                SELECT id, cash_shift_id, table_number, customer_name, total_price, status, created_at
                 FROM orders
-                WHERE status IN ('PENDING')
+                WHERE cash_shift_id = ?
+                AND status IN ('PENDING')
                 """;
-        return jdbc.query(sql, ROW_MAPPER);
+        return jdbc.query(sql, ROW_MAPPER, cashShiftId);
     }
 
     public int markAsInProgress(Long id) {

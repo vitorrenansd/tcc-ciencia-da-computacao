@@ -3,9 +3,11 @@ package com.tcc.serveme.api.service;
 import com.tcc.serveme.api.dto.order.*;
 import com.tcc.serveme.api.mapper.OrderItemMapper;
 import com.tcc.serveme.api.mapper.OrderMapper;
+import com.tcc.serveme.api.model.CashShift;
 import com.tcc.serveme.api.model.Order;
 import com.tcc.serveme.api.model.OrderItem;
 import com.tcc.serveme.api.model.Product;
+import com.tcc.serveme.api.repository.CashShiftRepository;
 import com.tcc.serveme.api.repository.OrderRepository;
 import com.tcc.serveme.api.repository.OrderItemRepository;
 
@@ -25,18 +27,23 @@ public class OrderService {
     private final OrderRepository orderRepo;
     private final OrderItemRepository orderItemRepo;
     private final ProductRepository productRepo;
+    private final CashShiftRepository cashShiftRepo;
 
     @Autowired
-    public OrderService(OrderRepository orderRepo, OrderItemRepository orderItemRepo, ProductRepository productRepo) {
+    public OrderService(OrderRepository orderRepo, OrderItemRepository orderItemRepo, ProductRepository productRepo, CashShiftRepository cashShiftRepo) {
         this.orderRepo = orderRepo;
         this.orderItemRepo = orderItemRepo;
         this.productRepo = productRepo;
+        this.cashShiftRepo = cashShiftRepo;
     }
 
 
     // Cria pedido novo no banco
     @Transactional
     public Long createOrder(NewOrderRequest request) {
+        CashShift openShift = cashShiftRepo.findOpenShift()
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.CONFLICT, "Sem caixa aberto, impossível criar pedidos."));
+
         BigDecimal total = BigDecimal.ZERO;
         List<Product> products = new ArrayList<>();
 
@@ -53,10 +60,10 @@ public class OrderService {
         }
 
         // Criação do pedido em banco
-        Order order = new Order(request.tableNumber(), request.customerName(), total);
+        Order order = new Order(openShift.getId(), request.tableNumber(), request.customerName(), total);
         Long orderId = orderRepo.save(order);
 
-        // Loop de criação dos itens no banco usando os produtos ja buscados
+        // Loop de criação dos itens no banco usando os produtos já buscados
         for (int i = 0; i < request.items().size(); i++) {
             NewOrderItemRequest itemRequest = request.items().get(i);
             Product product = products.get(i);
@@ -76,7 +83,9 @@ public class OrderService {
 
     // Retorna um List com todos os pedidos de status PENDING
     public List<PendingOrdersResponse> getPendingOrders() {
-        return orderRepo.findAllPendingOrders()
+        CashShift openShift = cashShiftRepo.findOpenShift()
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.CONFLICT, "Sem caixa aberto, impossível visualizar pedidos pendentes."));
+        return orderRepo.findAllPendingByShiftId(openShift.getId())
                 .stream()
                 .map(OrderMapper::toResponse) // Mapeia o retorno do repo para um DTO valido
                 .toList();
@@ -93,6 +102,6 @@ public class OrderService {
                             .toList();
                     return OrderMapper.toDetailsResponse(order, items); // Retorna os dados do pedido + itens
                 })
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Pedido não encontrado ou inativo. ID: " + id));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Pedido não encontrado. ID: " + id));
     }
 }

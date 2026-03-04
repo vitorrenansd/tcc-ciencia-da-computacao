@@ -6,6 +6,7 @@ import java.util.List;
 
 public record OrderDetailsResponse(
     Long id,
+    Long cashShiftId,
     Integer tableNumber,
     String customerName,
     BigDecimal totalPrice,
