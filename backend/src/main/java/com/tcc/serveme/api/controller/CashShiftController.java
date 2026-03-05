@@ -24,16 +24,16 @@ public class CashShiftController {
         return ResponseEntity.status(HttpStatus.CREATED).body(id);
     }
 
+    @PutMapping("/close")
+    public ResponseEntity<Void> close() {
+        cashShiftService.closeCashShift();
+        return ResponseEntity.noContent().build();
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<CashShiftDetailsResponse> getById(@PathVariable Long id) {
         CashShiftDetailsResponse response = cashShiftService.getDetailsById(id);
         return ResponseEntity.ok(response);
-    }
-
-    @PutMapping("/{id}/close")
-    public ResponseEntity<Void> close(@PathVariable Long id) {
-        cashShiftService.closeSession(id);
-        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/active")

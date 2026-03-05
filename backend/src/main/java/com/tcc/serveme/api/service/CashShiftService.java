@@ -33,15 +33,11 @@ public class CashShiftService {
 
     // Fechamento do caixa atual
     @Transactional
-    public void closeSession(Long id) {
-        CashShift session = cashShiftRepo.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Sessão de caixa não encontrada. ID: " + id));
+    public void closeCashShift() {
+        CashShift shift = cashShiftRepo.findOpenShift()
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Nenhuma sessão aberta no momento."));
 
-        if (session.getStatus() == CashShiftStatus.CLOSED) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Sessão já está fechada.");
-        }
-
-        cashShiftRepo.closeShift(id, LocalDateTime.now());
+        cashShiftRepo.closeShift(shift.getId(), LocalDateTime.now());
     }
 
     // Retorna os detalhes de um caixa pelo ID
