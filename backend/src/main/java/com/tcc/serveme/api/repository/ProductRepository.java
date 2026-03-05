@@ -113,6 +113,7 @@ public class ProductRepository {
                 FROM product
                 WHERE category_id = ?
                 AND inactive = FALSE
+                ORDER BY name
                 """;
         return jdbc.query(sql, ROW_MAPPER, categoryId);
     }
