@@ -3,7 +3,6 @@ package com.tcc.serveme.api.service;
 import com.tcc.serveme.api.dto.cashshift.CashShiftDetailsResponse;
 import com.tcc.serveme.api.mapper.CashShiftMapper;
 import com.tcc.serveme.api.model.CashShift;
-import com.tcc.serveme.api.model.enums.CashShiftStatus;
 import com.tcc.serveme.api.repository.CashShiftRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,7 +24,7 @@ public class CashShiftService {
 
     // Abertura de caixa novo
     @Transactional
-    public Long createCashSession() {
+    public Long createCashShift() {
         if (cashShiftRepo.findOpenShift().isPresent()) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Já existe turno aberto.");
         }
@@ -49,11 +48,11 @@ public class CashShiftService {
     public CashShiftDetailsResponse getDetailsById(Long id) {
         return cashShiftRepo.findById(id)
                 .map(CashShiftMapper::toDetailsResponse)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Sessão de caixa não encontrada. ID: " + id));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Sessão de caixa não encontrada."));
     }
 
     // Retorna o caixa aberto neste momento
-    public CashShiftDetailsResponse getOpenSession() {
+    public CashShiftDetailsResponse getOpenShift() {
         return cashShiftRepo.findOpenShift()
                 .map(CashShiftMapper::toDetailsResponse)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Nenhuma sessão aberta no momento."));

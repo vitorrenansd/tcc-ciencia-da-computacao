@@ -30,7 +30,7 @@ public class ProductCategoryController {
     }
 
     @GetMapping("/active")
-    public ResponseEntity<List<ProductCategoryResponse>> getActiveCategories() {
+    public ResponseEntity<List<ProductCategoryResponse>> getAllActive() {
         List<ProductCategoryResponse> response = productCategoryService.getActiveCategories();
         return ResponseEntity.ok(response);
     }

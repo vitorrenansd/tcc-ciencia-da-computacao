@@ -31,27 +31,27 @@ public class OrderController {
     }
 
     @GetMapping("/pending")
-    public ResponseEntity<List<OrdersByStatusResponse>> getPending() {
+    public ResponseEntity<List<OrdersByStatusResponse>> getAllPending() {
         return ResponseEntity.ok(orderService.getPendingOrders());
     }
 
     @GetMapping("/in-progress")
-    public ResponseEntity<List<OrdersByStatusResponse>> getInProgress() {
+    public ResponseEntity<List<OrdersByStatusResponse>> getAllInProgress() {
         return ResponseEntity.ok(orderService.getOrdersInProgress());
     }
 
     @GetMapping("/served")
-    public ResponseEntity<List<OrdersByStatusResponse>> getServed() {
+    public ResponseEntity<List<OrdersByStatusResponse>> getAllServed() {
         return ResponseEntity.ok(orderService.getServedOrders());
     }
 
     @GetMapping("/paid")
-    public ResponseEntity<List<OrdersByStatusResponse>> getPaid() {
+    public ResponseEntity<List<OrdersByStatusResponse>> getAllPaid() {
         return ResponseEntity.ok(orderService.getPaidOrders());
     }
 
     @GetMapping("/canceled")
-    public ResponseEntity<List<OrdersByStatusResponse>> getCanceled() {
+    public ResponseEntity<List<OrdersByStatusResponse>> getAllCanceled() {
         return ResponseEntity.ok(orderService.getCanceledOrders());
     }
 

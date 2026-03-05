@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/cash-session")
+@RequestMapping("/api/cash-shift")
 public class CashShiftController {
     private final CashShiftService cashShiftService;
 
@@ -20,7 +20,7 @@ public class CashShiftController {
 
     @PostMapping
     public ResponseEntity<?> open() {
-        Long id = cashShiftService.createCashSession();
+        Long id = cashShiftService.createCashShift();
         return ResponseEntity.status(HttpStatus.CREATED).body(id);
     }
 
@@ -36,9 +36,9 @@ public class CashShiftController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/open")
-    public ResponseEntity<CashShiftDetailsResponse> getOpenSession() {
-        CashShiftDetailsResponse response = cashShiftService.getOpenSession();
+    @GetMapping("/active")
+    public ResponseEntity<CashShiftDetailsResponse> getOpenShift() {
+        CashShiftDetailsResponse response = cashShiftService.getOpenShift();
         return ResponseEntity.ok(response);
     }
 }
