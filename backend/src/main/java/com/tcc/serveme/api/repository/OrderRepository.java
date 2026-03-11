@@ -1,167 +1,22 @@
 package com.tcc.serveme.api.repository;
 
 import com.tcc.serveme.api.entity.Order;
-import com.tcc.serveme.api.entity.enums.OrderStatus;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
-import org.springframework.stereotype.Repository;
-
-import java.sql.PreparedStatement;
-import java.sql.Statement;
-import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 
-@Repository
-public class OrderRepository {
-    private final JdbcTemplate jdbc;
-    private static final RowMapper<Order> ROW_MAPPER =
-            (rs, rowNum) -> new Order(
-                    rs.getLong("id"),
-                    rs.getLong("cash_shift_id"),
-                    rs.getInt("table_number"),
-                    rs.getString("customer_name"),
-                    rs.getBigDecimal("total_price"),
-                    OrderStatus.valueOf(rs.getString("status")),
-                    rs.getTimestamp("created_at").toLocalDateTime()
-                    // Caso adicionar novas colunas no banco, atualizar aqui
-            );
+public interface OrderRepository {
+    Optional<Order> findById(Long id);
+    List<Order> findAll();
+    Long save(Order order);
 
-    @Autowired
-    public OrderRepository(JdbcTemplate jdbc) {
-        this.jdbc = jdbc;
-    }
-    
-    public Optional<Order> findById(Long id) {
-        String sql = """
-                SELECT id, cash_shift_id, table_number, customer_name, total_price, status, created_at
-                FROM orders
-                WHERE id = ?
-                """;
-        List<Order> result = jdbc.query(sql, ROW_MAPPER, id);
-        return result.stream().findFirst();
-    }
-
-    public List<Order> findAll() {
-        String sql = """
-                SELECT id, cash_shift_id, table_number, customer_name, total_price, status, created_at
-                FROM orders
-                """;
-        return jdbc.query(sql, ROW_MAPPER);
-    }
-
-    public Long save(Order order) {
-        String sql = """
-                INSERT INTO orders (cash_shift_id, table_number, customer_name, total_price, status, created_at)
-                VALUES (?, ?, ?, ?, ?, ?)
-                """;
-        // Keyholder necessário para adição de itens em pedidos novos
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-
-        jdbc.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            ps.setLong(1 ,order.getCashShiftId());
-            ps.setInt(2, order.getTableNumber());
-            ps.setString(3, order.getCustomerName());
-            ps.setBigDecimal(4, order.getTotalPrice());
-            ps.setString(5, order.getStatus().name());
-            ps.setTimestamp(6, Timestamp.valueOf(order.getCreatedAt()));
-            return ps;
-        }, keyHolder);
-        return keyHolder.getKeyAs(Long.class);
-    }
-
-    // ************************
-    //  Specific queries below
-    // ************************
-
-    public List<Order> findAllPendingByShiftId(Long cashShiftId) {
-        String sql = """
-                SELECT id, cash_shift_id, table_number, customer_name, total_price, status, created_at
-                FROM orders
-                WHERE cash_shift_id = ?
-                AND status IN ('PENDING')
-                """;
-        return jdbc.query(sql, ROW_MAPPER, cashShiftId);
-    }
-
-    public List<Order> findAllInProgressByShiftId(Long cashShiftId) {
-        String sql = """
-                SELECT id, cash_shift_id, table_number, customer_name, total_price, status, created_at
-                FROM orders
-                WHERE cash_shift_id = ?
-                AND status IN ('IN_PROGRESS')
-                """;
-        return jdbc.query(sql, ROW_MAPPER, cashShiftId);
-    }
-
-    public List<Order> findAllServedByShiftId(Long cashShiftId) {
-        String sql = """
-                SELECT id, cash_shift_id, table_number, customer_name, total_price, status, created_at
-                FROM orders
-                WHERE cash_shift_id = ?
-                AND status IN ('SERVED')
-                """;
-        return jdbc.query(sql, ROW_MAPPER, cashShiftId);
-    }
-
-    public List<Order> findAllPaidByShiftId(Long cashShiftId) {
-        String sql = """
-                SELECT id, cash_shift_id, table_number, customer_name, total_price, status, created_at
-                FROM orders
-                WHERE cash_shift_id = ?
-                AND status IN ('PAID')
-                """;
-        return jdbc.query(sql, ROW_MAPPER, cashShiftId);
-    }
-
-    public List<Order> findAllCanceledByShiftId(Long cashShiftId) {
-        String sql = """
-                SELECT id, cash_shift_id, table_number, customer_name, total_price, status, created_at
-                FROM orders
-                WHERE cash_shift_id = ?
-                AND status IN ('CANCELED')
-                """;
-        return jdbc.query(sql, ROW_MAPPER, cashShiftId);
-    }
-
-    public int markAsInProgress(Long id) {
-        String sql = """
-                UPDATE orders
-                SET status = 'IN_PROGRESS'
-                WHERE id = ?
-                """;
-        return jdbc.update(sql, id);
-    }
-
-    public int markAsServed(Long id) {
-        String sql = """
-                UPDATE orders
-                SET status = 'SERVED'
-                WHERE id = ?
-                """;
-        return jdbc.update(sql, id);
-    }
-
-    public int markAsPaid(Long id) {
-        String sql = """
-                UPDATE orders
-                SET status = 'PAID'
-                WHERE id = ?
-                """;
-        return jdbc.update(sql, id);
-    }
-
-    public int cancel(Long id) {
-        String sql = """
-                UPDATE orders
-                SET status = 'CANCELED'
-                WHERE id = ?
-                """;
-        return jdbc.update(sql, id);
-    }
+    List<Order> findAllPendingByShiftId(Long cashShiftId);
+    List<Order> findAllInProgressByShiftId(Long cashShiftId);
+    List<Order> findAllServedByShiftId(Long cashShiftId);
+    List<Order> findAllPaidByShiftId(Long cashShiftId);
+    List<Order> findAllCanceledByShiftId(Long cashShiftId);
+    int markAsInProgress(Long id);
+    int markAsServed(Long id);
+    int markAsPaid(Long id);
+    int cancel(Long id);
 }
