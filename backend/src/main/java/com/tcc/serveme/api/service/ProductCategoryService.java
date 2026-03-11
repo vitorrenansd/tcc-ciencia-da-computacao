@@ -3,7 +3,7 @@ package com.tcc.serveme.api.service;
 import com.tcc.serveme.api.dto.category.NewProductCategoryRequest;
 import com.tcc.serveme.api.dto.category.ProductCategoryResponse;
 import com.tcc.serveme.api.mapper.ProductCategoryMapper;
-import com.tcc.serveme.api.model.ProductCategory;
+import com.tcc.serveme.api.entity.ProductCategory;
 import com.tcc.serveme.api.repository.ProductCategoryRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,6 +1,6 @@
-package com.tcc.serveme.api.model;
+package com.tcc.serveme.api.entity;
 
-import com.tcc.serveme.api.model.enums.CashShiftStatus;
+import com.tcc.serveme.api.entity.enums.CashShiftStatus;
 
 import java.time.LocalDateTime;
 

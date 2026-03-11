@@ -2,7 +2,7 @@ package com.tcc.serveme.api.service;
 
 import com.tcc.serveme.api.dto.cashshift.CashShiftDetailsResponse;
 import com.tcc.serveme.api.mapper.CashShiftMapper;
-import com.tcc.serveme.api.model.CashShift;
+import com.tcc.serveme.api.entity.CashShift;
 import com.tcc.serveme.api.repository.CashShiftRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

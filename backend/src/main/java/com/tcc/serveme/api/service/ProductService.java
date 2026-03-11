@@ -4,8 +4,8 @@ import com.tcc.serveme.api.dto.product.NewProductRequest;
 import com.tcc.serveme.api.dto.product.ProductDetailsResponse;
 import com.tcc.serveme.api.dto.product.ProductSummaryResponse;
 import com.tcc.serveme.api.mapper.ProductMapper;
-import com.tcc.serveme.api.model.Product;
-import com.tcc.serveme.api.model.ProductCategory;
+import com.tcc.serveme.api.entity.Product;
+import com.tcc.serveme.api.entity.ProductCategory;
 import com.tcc.serveme.api.repository.ProductCategoryRepository;
 import com.tcc.serveme.api.repository.ProductRepository;
 

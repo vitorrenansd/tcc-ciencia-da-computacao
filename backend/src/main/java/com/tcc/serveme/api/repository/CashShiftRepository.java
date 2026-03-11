@@ -1,7 +1,7 @@
 package com.tcc.serveme.api.repository;
 
-import com.tcc.serveme.api.model.CashShift;
-import com.tcc.serveme.api.model.enums.CashShiftStatus;
+import com.tcc.serveme.api.entity.CashShift;
+import com.tcc.serveme.api.entity.enums.CashShiftStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;

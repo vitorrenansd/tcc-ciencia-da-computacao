@@ -1,7 +1,7 @@
 package com.tcc.serveme.api.mapper;
 
 import com.tcc.serveme.api.dto.cashshift.CashShiftDetailsResponse;
-import com.tcc.serveme.api.model.CashShift;
+import com.tcc.serveme.api.entity.CashShift;
 
 public class CashShiftMapper {
 

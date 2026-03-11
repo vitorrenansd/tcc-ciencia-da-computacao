@@ -3,7 +3,7 @@ package com.tcc.serveme.api.mapper;
 import com.tcc.serveme.api.dto.product.NewProductRequest;
 import com.tcc.serveme.api.dto.product.ProductDetailsResponse;
 import com.tcc.serveme.api.dto.product.ProductSummaryResponse;
-import com.tcc.serveme.api.model.Product;
+import com.tcc.serveme.api.entity.Product;
 
 public class ProductMapper {
     public static Product toModel(NewProductRequest dto) {

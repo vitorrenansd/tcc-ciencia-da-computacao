@@ -1,7 +1,7 @@
 package com.tcc.serveme.api.mapper;
 
 import com.tcc.serveme.api.dto.order.*;
-import com.tcc.serveme.api.model.Order;
+import com.tcc.serveme.api.entity.Order;
 
 import java.util.List;
 

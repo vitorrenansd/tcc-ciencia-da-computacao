@@ -1,6 +1,6 @@
-package com.tcc.serveme.api.model;
+package com.tcc.serveme.api.entity;
 
-import com.tcc.serveme.api.model.enums.OrderStatus;
+import com.tcc.serveme.api.entity.enums.OrderStatus;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

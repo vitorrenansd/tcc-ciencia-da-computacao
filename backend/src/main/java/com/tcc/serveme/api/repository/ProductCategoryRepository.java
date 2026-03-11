@@ -1,6 +1,6 @@
 package com.tcc.serveme.api.repository;
 
-import com.tcc.serveme.api.model.ProductCategory;
+import com.tcc.serveme.api.entity.ProductCategory;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;

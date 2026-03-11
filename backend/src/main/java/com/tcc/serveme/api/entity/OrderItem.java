@@ -1,4 +1,4 @@
-package com.tcc.serveme.api.model;
+package com.tcc.serveme.api.entity;
 
 import java.math.BigDecimal;
 

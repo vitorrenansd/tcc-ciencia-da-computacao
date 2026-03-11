@@ -1,7 +1,7 @@
 package com.tcc.serveme.api.repository;
 
-import com.tcc.serveme.api.model.Order;
-import com.tcc.serveme.api.model.enums.OrderStatus;
+import com.tcc.serveme.api.entity.Order;
+import com.tcc.serveme.api.entity.enums.OrderStatus;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
