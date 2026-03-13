@@ -95,17 +95,7 @@ public class JdbcProductRepository implements ProductRepository {
     }
 
     @Override
-    public List<Product> findAllActive() {
-        String sql = """
-                SELECT id, category_id, name, description, price, inactive
-                FROM product
-                WHERE inactive = FALSE
-                """;
-        return jdbc.query(sql, ROW_MAPPER);
-    }
-
-    @Override
-    public List<Product> findByName(String keyword) {
+    public List<Product> findAllByName(String keyword) {
         String sql = """
                 SELECT id, category_id, name, description, price, inactive
                 FROM product
@@ -114,6 +104,17 @@ public class JdbcProductRepository implements ProductRepository {
                 """;
         String searchPattern = "%" + keyword + "%";
         return jdbc.query(sql, ROW_MAPPER, searchPattern);
+    }
+
+    @Override
+    public List<Product> findAllByCategory(Long categoryId) {
+        String sql = """
+                SELECT id, category_id, name, description, price, inactive
+                FROM product
+                WHERE category_id = ?
+                ORDER BY name
+                """;
+        return jdbc.query(sql, ROW_MAPPER, categoryId);
     }
 
     @Override

@@ -13,7 +13,7 @@ public interface ProductRepository {
     int softDelete(Long id);
 
     Optional<Product> findByIdActive(Long id);
-    List<Product> findAllActive();
-    List<Product> findByName(String keyword);
+    List<Product> findAllByName(String keyword);
+    List<Product> findAllByCategory(Long categoryId);
     List<Product> findAllActiveByCategory(Long categoryId);
 }
