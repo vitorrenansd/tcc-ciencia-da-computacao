@@ -31,13 +31,25 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ProductSummaryResponse>> getAllActive(@RequestParam(required = false) Long categoryId) {
+    public ResponseEntity<List<ProductSummaryResponse>> getProducts(
+            @RequestParam(required = false) Long categoryId,
+            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false, defaultValue = "false") boolean activeOnly) {
+
+        if (keyword != null && !keyword.isBlank()) {
+            // EXEMPLO: /api/product?keyword=pastel
+            return ResponseEntity.ok(productService.getProductsByName(keyword));
+        }
         if (categoryId != null) {
+            if (activeOnly) {
+                // EXEMPLO: /api/product?categoryId=1&activeOnly=true
+                return ResponseEntity.ok(productService.getActiveProductsByCategory(categoryId));
+            }
             // EXEMPLO: /api/product?categoryId=1
-            return ResponseEntity.ok(productService.getActiveProductsByCategory(categoryId));
+            return ResponseEntity.ok(productService.getProductsByCategory(categoryId));
         }
         // EXEMPLO: /api/product
-        return ResponseEntity.ok(productService.getAllActiveProducts());
+        return ResponseEntity.ok(productService.getAllProducts());
     }
 
     @GetMapping("/{id}")
