@@ -1,5 +1,7 @@
 package com.tcc.serveme.api.product.service;
 
+import com.tcc.serveme.api.exception.BadRequestException;
+import com.tcc.serveme.api.exception.NotFoundException;
 import com.tcc.serveme.api.product.dto.NewProductRequest;
 import com.tcc.serveme.api.product.dto.ProductDetailsResponse;
 import com.tcc.serveme.api.product.dto.ProductSummaryResponse;
@@ -10,10 +12,8 @@ import com.tcc.serveme.api.category.repository.ProductCategoryRepository;
 import com.tcc.serveme.api.product.repository.ProductRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -33,7 +33,7 @@ public class ProductService {
     @Transactional
     public void createProduct(NewProductRequest request) {
         productCategoryRepo.findById(request.categoryId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Categoria não encontrada. ID:" + request.categoryId()));
+                .orElseThrow(() -> new BadRequestException("Categoria não encontrada. ID:" + request.categoryId()));
 
         Product product = ProductMapper.toModel(request);
         productRepo.save(product);
@@ -42,9 +42,9 @@ public class ProductService {
     // Retorna os detalhes de um produto pelo ID do banco
     public ProductDetailsResponse getDetailsById(Long id) {
         Product product = productRepo.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Produto não encontrado"));
+                .orElseThrow(() -> new NotFoundException("Produto não encontrado"));
         ProductCategory category = productCategoryRepo.findById(product.getCategoryId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Categoria não encontrada"));
+                .orElseThrow(() -> new NotFoundException("Categoria não encontrada"));
 
         return ProductMapper.toDetailsResponse(product, category.getName());
     }

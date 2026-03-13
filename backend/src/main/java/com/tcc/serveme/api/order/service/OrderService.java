@@ -1,5 +1,7 @@
 package com.tcc.serveme.api.order.service;
 
+import com.tcc.serveme.api.exception.ConflictException;
+import com.tcc.serveme.api.exception.NotFoundException;
 import com.tcc.serveme.api.order.mapper.OrderItemMapper;
 import com.tcc.serveme.api.order.mapper.OrderMapper;
 import com.tcc.serveme.api.cashshift.entity.CashShift;
@@ -13,10 +15,8 @@ import com.tcc.serveme.api.order.repository.OrderItemRepository;
 import com.tcc.serveme.api.product.repository.ProductRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -42,7 +42,7 @@ public class OrderService {
     @Transactional
     public Long createOrder(NewOrderRequest request) {
         CashShift openShift = cashShiftRepo.findOpenShift()
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.CONFLICT, "Sem caixa aberto, impossível criar pedidos."));
+                .orElseThrow(() -> new ConflictException("Sem caixa aberto, impossível criar pedidos."));
 
         BigDecimal total = BigDecimal.ZERO;
         List<Product> products = new ArrayList<>();
@@ -50,7 +50,7 @@ public class OrderService {
         // Busca e valida todos os produtos
         for (NewOrderItemRequest itemRequest : request.items()) {
             Product product = productRepo.findByIdActive(itemRequest.productId())
-                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Produto não encontrado ou inativo. ID: " + itemRequest.productId()));
+                    .orElseThrow(() -> new NotFoundException("Produto não encontrado ou inativo. ID: " + itemRequest.productId()));
 
             products.add(product);
 
@@ -84,7 +84,7 @@ public class OrderService {
     // Retorna um List com todos os pedidos de status PENDING
     public List<OrdersByStatusResponse> getPendingOrders() {
         CashShift openShift = cashShiftRepo.findOpenShift()
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.CONFLICT, "Sem caixa aberto, impossível visualizar pedidos pendentes."));
+                .orElseThrow(() -> new ConflictException("Sem caixa aberto, impossível visualizar pedidos pendentes."));
         return orderRepo.findAllPendingByShiftId(openShift.getId())
                 .stream()
                 .map(OrderMapper::toOrdersByStatus) // Mapeia o retorno do repo para um DTO valido
@@ -93,7 +93,7 @@ public class OrderService {
 
     public List<OrdersByStatusResponse> getOrdersInProgress() {
         CashShift openShift = cashShiftRepo.findOpenShift()
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.CONFLICT, "Sem caixa aberto, impossível visualizar pedidos em progresso."));
+                .orElseThrow(() -> new ConflictException("Sem caixa aberto, impossível visualizar pedidos em progresso."));
         return orderRepo.findAllInProgressByShiftId(openShift.getId())
                 .stream()
                 .map(OrderMapper::toOrdersByStatus) // Mapeia o retorno do repo para um DTO valido
@@ -102,7 +102,7 @@ public class OrderService {
 
     public List<OrdersByStatusResponse> getServedOrders() {
         CashShift openShift = cashShiftRepo.findOpenShift()
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.CONFLICT, "Sem caixa aberto, impossível visualizar pedidos servidos."));
+                .orElseThrow(() -> new ConflictException("Sem caixa aberto, impossível visualizar pedidos servidos."));
         return orderRepo.findAllServedByShiftId(openShift.getId())
                 .stream()
                 .map(OrderMapper::toOrdersByStatus) // Mapeia o retorno do repo para um DTO valido
@@ -111,7 +111,7 @@ public class OrderService {
 
     public List<OrdersByStatusResponse> getPaidOrders() {
         CashShift openShift = cashShiftRepo.findOpenShift()
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.CONFLICT, "Sem caixa aberto, impossível visualizar pedidos pagos."));
+                .orElseThrow(() -> new ConflictException("Sem caixa aberto, impossível visualizar pedidos pagos."));
         return orderRepo.findAllPaidByShiftId(openShift.getId())
                 .stream()
                 .map(OrderMapper::toOrdersByStatus) // Mapeia o retorno do repo para um DTO valido
@@ -120,7 +120,7 @@ public class OrderService {
 
     public List<OrdersByStatusResponse> getCanceledOrders() {
         CashShift openShift = cashShiftRepo.findOpenShift()
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.CONFLICT, "Sem caixa aberto, impossível visualizar pedidos cancelados."));
+                .orElseThrow(() -> new ConflictException("Sem caixa aberto, impossível visualizar pedidos cancelados."));
         return orderRepo.findAllCanceledByShiftId(openShift.getId())
                 .stream()
                 .map(OrderMapper::toOrdersByStatus) // Mapeia o retorno do repo para um DTO valido
@@ -138,6 +138,6 @@ public class OrderService {
                             .toList();
                     return OrderMapper.toDetailsResponse(order, items); // Retorna os dados do pedido + itens
                 })
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Pedido não encontrado. ID: " + id));
+                .orElseThrow(() -> new NotFoundException("Pedido não encontrado. ID: " + id));
     }
 }

@@ -5,12 +5,11 @@ import com.tcc.serveme.api.category.dto.ProductCategoryResponse;
 import com.tcc.serveme.api.category.mapper.ProductCategoryMapper;
 import com.tcc.serveme.api.category.entity.ProductCategory;
 import com.tcc.serveme.api.category.repository.ProductCategoryRepository;
+import com.tcc.serveme.api.exception.BadRequestException;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -28,7 +27,7 @@ public class ProductCategoryService {
     @Transactional
     public void createProductCategory(NewProductCategoryRequest request) {
         if (request.name() == null || request.name().isBlank()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Nome da categoria é obrigatório");
+            throw new BadRequestException("Nome da categoria é obrigatório");
         }
         ProductCategory productCategory = ProductCategoryMapper.toModel(request);
         productCategoryRepo.save(productCategory);
