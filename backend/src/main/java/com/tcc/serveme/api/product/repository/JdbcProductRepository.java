@@ -53,7 +53,7 @@ public class JdbcProductRepository implements ProductRepository {
     public int save(Product product) {
         String sql = """
                 INSERT INTO product (category_id, name, description, price, inactive)
-                VALUES (?, ?, ?, ?, ?)
+                VALUES (?, UPPER(?), UPPER(?), ?, ?)
                 """;
         return jdbc.update(sql, product.getCategoryId(), product.getName(), product.getDescription(), product.getPrice(), product.isInactive());
     }
@@ -62,7 +62,7 @@ public class JdbcProductRepository implements ProductRepository {
     public int update(Product product) {
         String sql = """
                 UPDATE product
-                SET category_id = ?, name = ?, description = ?, price = ?, inactive = ?
+                SET category_id = ?, name = UPPER(?), description = UPPER(?), price = ?, inactive = ?
                 WHERE id = ?
                 """;
         return jdbc.update(sql, product.getCategoryId(), product.getName(), product.getDescription(), product.getPrice(), product.isInactive(), product.getId());
@@ -99,7 +99,7 @@ public class JdbcProductRepository implements ProductRepository {
         String sql = """
                 SELECT id, category_id, name, description, price, inactive
                 FROM product
-                WHERE name LIKE ?
+                WHERE UPPER(name) LIKE UPPER(?)
                 AND inactive = FALSE
                 """;
         String searchPattern = "%" + keyword + "%";

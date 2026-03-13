@@ -60,7 +60,7 @@ public class JdbcOrderRepository implements OrderRepository {
     public Long save(Order order) {
         String sql = """
                 INSERT INTO orders (cash_shift_id, table_number, customer_name, total_price, status, created_at)
-                VALUES (?, ?, ?, ?, ?, ?)
+                VALUES (?, ?, UPPER(?), ?, ?, ?)
                 """;
         // Keyholder necessário para adição de itens em pedidos novos
         KeyHolder keyHolder = new GeneratedKeyHolder();

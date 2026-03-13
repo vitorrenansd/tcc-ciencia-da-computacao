@@ -51,7 +51,7 @@ public class JdbcProductCategoryRepository implements ProductCategoryRepository 
     public int save(ProductCategory productCategory) {
         String sql = """
                 INSERT INTO product_category (name, inactive)
-                VALUES (?, ?)
+                VALUES (UPPER(?), ?)
                 """;
         return jdbc.update(sql, productCategory.getName(), productCategory.isInactive());
     }
@@ -60,7 +60,7 @@ public class JdbcProductCategoryRepository implements ProductCategoryRepository 
     public int update(ProductCategory productCategory) {
         String sql = """
                 UPDATE product_category
-                SET name = ?, inactive = ?
+                SET name = UPPER(?), inactive = ?
                 WHERE id = ?
                 """;
         return jdbc.update(sql, productCategory.getName(), productCategory.isInactive(), productCategory.getId());
@@ -95,7 +95,7 @@ public class JdbcProductCategoryRepository implements ProductCategoryRepository 
         String sql = """
                 SELECT id, name, inactive
                 FROM product_category
-                WHERE name LIKE ?
+                WHERE UPPER(name) LIKE UPPER(?)
                 """;
         String searchPattern = "%" + keyword + "%";
         return jdbc.query(sql, ROW_MAPPER, searchPattern);
