@@ -42,6 +42,7 @@ public class JdbcProductCategoryRepository implements ProductCategoryRepository 
         String sql = """
                 SELECT id, name, inactive
                 FROM product_category
+                LIMIT 100
                 """;
         return jdbc.query(sql, ROW_MAPPER);
     }
