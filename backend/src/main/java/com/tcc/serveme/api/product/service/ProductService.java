@@ -42,9 +42,9 @@ public class ProductService {
     // Retorna os detalhes de um produto pelo ID do banco
     public ProductDetailsResponse getDetailsById(Long id) {
         Product product = productRepo.findById(id)
-                .orElseThrow(() -> new NotFoundException("Produto não encontrado"));
+                .orElseThrow(() -> new NotFoundException("Produto não encontrado. ID: " + id));
         ProductCategory category = productCategoryRepo.findById(product.getCategoryId())
-                .orElseThrow(() -> new NotFoundException("Categoria não encontrada"));
+                .orElseThrow(() -> new NotFoundException("Categoria não encontrada. ID: " + id));
 
         return ProductMapper.toDetailsResponse(product, category.getName());
     }
