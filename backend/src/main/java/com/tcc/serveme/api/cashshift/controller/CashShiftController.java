@@ -18,7 +18,7 @@ public class CashShiftController {
     }
 
 
-    @PostMapping
+    @PostMapping("/open")
     public ResponseEntity<?> open() {
         Long id = cashShiftService.createCashShift();
         return ResponseEntity.status(HttpStatus.CREATED).body(id);
