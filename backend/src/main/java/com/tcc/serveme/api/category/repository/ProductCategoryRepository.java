@@ -13,5 +13,5 @@ public interface ProductCategoryRepository {
     int softDelete(Long id);
 
     List<ProductCategory> findAllActive();
-    List<ProductCategory> findByNameActive(String keyword);
+    List<ProductCategory> findAllByName(String keyword);
 }

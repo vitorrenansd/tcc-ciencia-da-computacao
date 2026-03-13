@@ -91,12 +91,11 @@ public class JdbcProductCategoryRepository implements ProductCategoryRepository 
     }
 
     @Override
-    public List<ProductCategory> findByNameActive(String keyword) {
+    public List<ProductCategory> findAllByName(String keyword) {
         String sql = """
                 SELECT id, name, inactive
                 FROM product_category
                 WHERE name LIKE ?
-                AND inactive = FALSE
                 """;
         String searchPattern = "%" + keyword + "%";
         return jdbc.query(sql, ROW_MAPPER, searchPattern);

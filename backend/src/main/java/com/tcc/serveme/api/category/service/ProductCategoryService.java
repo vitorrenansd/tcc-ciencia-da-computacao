@@ -34,7 +34,7 @@ public class ProductCategoryService {
     }
 
     // Retorna um List com todas as categorias marcadas inactive = FALSE
-    public List<ProductCategoryResponse> getActiveCategories() {
+    public List<ProductCategoryResponse> getAllActiveCategories() {
         return productCategoryRepo.findAllActive()
                 .stream()
                 .map(ProductCategoryMapper::toResponse) // Mapeia o retorno do repo para um DTO valido
