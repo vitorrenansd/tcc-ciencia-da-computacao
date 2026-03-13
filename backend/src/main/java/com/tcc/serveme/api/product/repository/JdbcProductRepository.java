@@ -44,6 +44,7 @@ public class JdbcProductRepository implements ProductRepository {
         String sql = """
                 SELECT id, category_id, name, description, price, inactive
                 FROM product
+                LIMIT 100
                 """;
         return jdbc.query(sql, ROW_MAPPER);
     }
