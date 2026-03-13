@@ -81,6 +81,10 @@ public class OrderService {
         return orderId;
     }
 
+    // **************************************************
+    //  Abaixo, métodos específicos para status de order
+    // **************************************************
+
     // Retorna um List com todos os pedidos de status PENDING
     public List<OrdersByStatusResponse> getPendingOrders() {
         CashShift openShift = cashShiftRepo.findOpenShift()
@@ -91,6 +95,7 @@ public class OrderService {
                 .toList();
     }
 
+    // Retorna um List com todos os pedidos de status IN_PROGRESS
     public List<OrdersByStatusResponse> getOrdersInProgress() {
         CashShift openShift = cashShiftRepo.findOpenShift()
                 .orElseThrow(() -> new ConflictException("Sem caixa aberto, impossível visualizar pedidos em progresso."));
@@ -100,6 +105,7 @@ public class OrderService {
                 .toList();
     }
 
+    // Retorna um List com todos os pedidos de status SERVED
     public List<OrdersByStatusResponse> getServedOrders() {
         CashShift openShift = cashShiftRepo.findOpenShift()
                 .orElseThrow(() -> new ConflictException("Sem caixa aberto, impossível visualizar pedidos servidos."));
@@ -109,6 +115,7 @@ public class OrderService {
                 .toList();
     }
 
+    // Retorna um List com todos os pedidos de status PAID
     public List<OrdersByStatusResponse> getPaidOrders() {
         CashShift openShift = cashShiftRepo.findOpenShift()
                 .orElseThrow(() -> new ConflictException("Sem caixa aberto, impossível visualizar pedidos pagos."));
@@ -118,6 +125,7 @@ public class OrderService {
                 .toList();
     }
 
+    // Retorna um List com todos os pedidos de status CANCELED
     public List<OrdersByStatusResponse> getCanceledOrders() {
         CashShift openShift = cashShiftRepo.findOpenShift()
                 .orElseThrow(() -> new ConflictException("Sem caixa aberto, impossível visualizar pedidos cancelados."));
@@ -126,6 +134,8 @@ public class OrderService {
                 .map(OrderMapper::toOrdersByStatus) // Mapeia o retorno do repo para um DTO valido
                 .toList();
     }
+
+    // **************************************************
 
     // Retorna os detalhes de um pedido (com itens) pelo ID
     public OrderDetailsResponse findDetailsById(Long id) {
