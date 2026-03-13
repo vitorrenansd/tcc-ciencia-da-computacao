@@ -39,6 +39,14 @@ public class ProductService {
         productRepo.save(product);
     }
 
+    // Retorna um List com todos os produtos (tem LIMIT no repo)
+    public List<ProductSummaryResponse> getAllProducts() {
+        return productRepo.findAll()
+                .stream()
+                .map(ProductMapper::toSummaryResponse)
+                .toList();
+    }
+
     // Retorna os detalhes de um produto pelo ID do banco
     public ProductDetailsResponse getDetailsById(Long id) {
         Product product = productRepo.findById(id)
@@ -49,11 +57,19 @@ public class ProductService {
         return ProductMapper.toDetailsResponse(product, category.getName());
     }
 
-    // Retorna um List com todos os produtos ativos
-    public List<ProductSummaryResponse> getAllActiveProducts() {
-        return productRepo.findAllActive()
+    // Retorna um List com os produtos da keyword digitada (pesquisa por nome)
+    public List<ProductSummaryResponse> getProductsByName(String keyword) {
+        return productRepo.findAllByName(keyword)
                 .stream()
-                .map(ProductMapper::toSummaryResponse)  // Mapeia o retorno do repo para um DTO valido
+                .map(ProductMapper::toSummaryResponse)
+                .toList();
+    }
+
+    // Retorna um List com os produtos da categoria (ativos ou não)
+    public List<ProductSummaryResponse> getProductsByCategory(Long categoryId) {
+        return productRepo.findAllByCategory(categoryId)
+                .stream()
+                .map(ProductMapper::toSummaryResponse)
                 .toList();
     }
 

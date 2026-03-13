@@ -29,9 +29,20 @@ public class ProductCategoryController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @GetMapping("/active")
-    public ResponseEntity<List<ProductCategoryResponse>> getAllActive() {
-        List<ProductCategoryResponse> response = productCategoryService.getActiveCategories();
-        return ResponseEntity.ok(response);
+    @GetMapping
+    public ResponseEntity<List<ProductCategoryResponse>> getProductCategories(
+            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false, defaultValue = "false") boolean activeOnly) {
+
+        if (keyword != null && !keyword.isBlank()) {
+            // EXEMPLO: api/product-category?keyword=BEBIDAS
+            return ResponseEntity.ok(productCategoryService.getCategoriesByName(keyword));
+        }
+        if (activeOnly) {
+            // EXEMPLO: api/product-category?activeOnly=true
+            return ResponseEntity.ok(productCategoryService.getAllActiveCategories());
+        }
+        // EXEMPLO: api/product-category
+        return ResponseEntity.ok(productCategoryService.getAllCategories());
     }
 }

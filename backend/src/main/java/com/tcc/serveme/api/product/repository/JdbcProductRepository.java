@@ -44,6 +44,7 @@ public class JdbcProductRepository implements ProductRepository {
         String sql = """
                 SELECT id, category_id, name, description, price, inactive
                 FROM product
+                LIMIT 100
                 """;
         return jdbc.query(sql, ROW_MAPPER);
     }
@@ -52,7 +53,7 @@ public class JdbcProductRepository implements ProductRepository {
     public int save(Product product) {
         String sql = """
                 INSERT INTO product (category_id, name, description, price, inactive)
-                VALUES (?, ?, ?, ?, ?)
+                VALUES (?, UPPER(?), UPPER(?), ?, ?)
                 """;
         return jdbc.update(sql, product.getCategoryId(), product.getName(), product.getDescription(), product.getPrice(), product.isInactive());
     }
@@ -61,7 +62,7 @@ public class JdbcProductRepository implements ProductRepository {
     public int update(Product product) {
         String sql = """
                 UPDATE product
-                SET category_id = ?, name = ?, description = ?, price = ?, inactive = ?
+                SET category_id = ?, name = UPPER(?), description = UPPER(?), price = ?, inactive = ?
                 WHERE id = ?
                 """;
         return jdbc.update(sql, product.getCategoryId(), product.getName(), product.getDescription(), product.getPrice(), product.isInactive(), product.getId());
@@ -94,25 +95,26 @@ public class JdbcProductRepository implements ProductRepository {
     }
 
     @Override
-    public List<Product> findAllActive() {
+    public List<Product> findAllByName(String keyword) {
         String sql = """
                 SELECT id, category_id, name, description, price, inactive
                 FROM product
-                WHERE inactive = FALSE
-                """;
-        return jdbc.query(sql, ROW_MAPPER);
-    }
-
-    @Override
-    public List<Product> findByName(String keyword) {
-        String sql = """
-                SELECT id, category_id, name, description, price, inactive
-                FROM product
-                WHERE name LIKE ?
+                WHERE UPPER(name) LIKE UPPER(?)
                 AND inactive = FALSE
                 """;
         String searchPattern = "%" + keyword + "%";
         return jdbc.query(sql, ROW_MAPPER, searchPattern);
+    }
+
+    @Override
+    public List<Product> findAllByCategory(Long categoryId) {
+        String sql = """
+                SELECT id, category_id, name, description, price, inactive
+                FROM product
+                WHERE category_id = ?
+                ORDER BY name
+                """;
+        return jdbc.query(sql, ROW_MAPPER, categoryId);
     }
 
     @Override

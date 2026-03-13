@@ -34,7 +34,7 @@ public class JdbcOrderItemRepository implements OrderItemRepository {
     public int save(OrderItem orderItem) {
         String sql = """
                 INSERT INTO order_item (order_id, product_id, product_name, product_price, quantity, notes)
-                VALUES (?, ?, ?, ?, ?, ?)
+                VALUES (?, ?, UPPER(?), ?, ?, UPPER(?))
                 """;
         return jdbc.update(sql, orderItem.getOrderId(), orderItem.getProductId(), orderItem.getProductName(), orderItem.getProductPrice(), orderItem.getQuantity(), orderItem.getNotes());
     }

@@ -42,6 +42,7 @@ public class JdbcProductCategoryRepository implements ProductCategoryRepository 
         String sql = """
                 SELECT id, name, inactive
                 FROM product_category
+                LIMIT 100
                 """;
         return jdbc.query(sql, ROW_MAPPER);
     }
@@ -50,7 +51,7 @@ public class JdbcProductCategoryRepository implements ProductCategoryRepository 
     public int save(ProductCategory productCategory) {
         String sql = """
                 INSERT INTO product_category (name, inactive)
-                VALUES (?, ?)
+                VALUES (UPPER(?), ?)
                 """;
         return jdbc.update(sql, productCategory.getName(), productCategory.isInactive());
     }
@@ -59,7 +60,7 @@ public class JdbcProductCategoryRepository implements ProductCategoryRepository 
     public int update(ProductCategory productCategory) {
         String sql = """
                 UPDATE product_category
-                SET name = ?, inactive = ?
+                SET name = UPPER(?), inactive = ?
                 WHERE id = ?
                 """;
         return jdbc.update(sql, productCategory.getName(), productCategory.isInactive(), productCategory.getId());
@@ -90,12 +91,11 @@ public class JdbcProductCategoryRepository implements ProductCategoryRepository 
     }
 
     @Override
-    public List<ProductCategory> findByNameActive(String keyword) {
+    public List<ProductCategory> findAllByName(String keyword) {
         String sql = """
                 SELECT id, name, inactive
                 FROM product_category
-                WHERE name LIKE ?
-                AND inactive = FALSE
+                WHERE UPPER(name) LIKE UPPER(?)
                 """;
         String searchPattern = "%" + keyword + "%";
         return jdbc.query(sql, ROW_MAPPER, searchPattern);
