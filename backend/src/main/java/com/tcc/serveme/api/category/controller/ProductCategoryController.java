@@ -2,6 +2,7 @@ package com.tcc.serveme.api.category.controller;
 
 import com.tcc.serveme.api.category.dto.NewProductCategoryRequest;
 import com.tcc.serveme.api.category.dto.ProductCategoryResponse;
+import com.tcc.serveme.api.category.dto.UpdateProductCategoryRequest;
 import com.tcc.serveme.api.category.service.ProductCategoryService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,5 +45,20 @@ public class ProductCategoryController {
         }
         // EXEMPLO: api/product-category
         return ResponseEntity.ok(productCategoryService.getAllCategories());
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> update(
+            @PathVariable Long id,
+            @RequestBody UpdateProductCategoryRequest request) {
+
+        productCategoryService.updateProductCategory(id, request);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        productCategoryService.deleteProductCategory(id);
+        return ResponseEntity.noContent().build();
     }
 }

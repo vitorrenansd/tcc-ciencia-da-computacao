@@ -2,10 +2,12 @@ package com.tcc.serveme.api.category.service;
 
 import com.tcc.serveme.api.category.dto.NewProductCategoryRequest;
 import com.tcc.serveme.api.category.dto.ProductCategoryResponse;
+import com.tcc.serveme.api.category.dto.UpdateProductCategoryRequest;
 import com.tcc.serveme.api.category.mapper.ProductCategoryMapper;
 import com.tcc.serveme.api.category.entity.ProductCategory;
 import com.tcc.serveme.api.category.repository.ProductCategoryRepository;
 import com.tcc.serveme.api.exception.BadRequestException;
+import com.tcc.serveme.api.exception.NotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,6 +33,31 @@ public class ProductCategoryService {
         }
         ProductCategory productCategory = ProductCategoryMapper.toModel(request);
         productCategoryRepo.save(productCategory);
+    }
+
+    // Atualiza os dados de uma categoria existente
+    @Transactional
+    public void updateProductCategory(Long id, UpdateProductCategoryRequest request) {
+        ProductCategory category = productCategoryRepo.findById(id)
+                .orElseThrow(() -> new NotFoundException("Categoria não encontrada. ID: " + id));
+
+        if (request.name() == null || request.name().isBlank()) {
+            throw new BadRequestException("Nome da categoria é obrigatório");
+        }
+
+        ProductCategory updated = new ProductCategory(
+                category.getId(),
+                request.name(),
+                request.inactive()
+        );
+        productCategoryRepo.update(updated);
+    }
+
+    // Inativa uma categoria (delete lógico)
+    public void deleteProductCategory(Long id) {
+        productCategoryRepo.findById(id)
+                .orElseThrow(() -> new NotFoundException("Categoria não encontrada. ID: " + id));
+        productCategoryRepo.softDelete(id);
     }
 
     // Retorna um List com todas as categorias
