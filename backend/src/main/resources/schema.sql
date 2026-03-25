@@ -17,7 +17,8 @@ CREATE TABLE product (
     name VARCHAR(40) NOT NULL,
     description VARCHAR(255),
     price NUMERIC(10,2) NOT NULL,
-    inactive BOOLEAN DEFAULT FALSE,
+    active BOOLEAN DEFAULT TRUE,
+    available BOOLEAN DEFAULT TRUE,
 
     CONSTRAINT fk_product_category
         FOREIGN KEY (category_id)

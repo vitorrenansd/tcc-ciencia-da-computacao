@@ -74,8 +74,8 @@ public class ProductService {
     }
 
     // Retorna um List com os produtos ativos da categoria
-    public List<ProductSummaryResponse> getActiveProductsByCategory(Long categoryId) {
-        return productRepo.findAllActiveByCategory(categoryId)
+    public List<ProductSummaryResponse> getAvailableProductsByCategory(Long categoryId) {
+        return productRepo.findAllAvailableByCategory(categoryId)
                 .stream()
                 .map(ProductMapper::toSummaryResponse)  // Mapeia o retorno do repo para um DTO valido
                 .toList();

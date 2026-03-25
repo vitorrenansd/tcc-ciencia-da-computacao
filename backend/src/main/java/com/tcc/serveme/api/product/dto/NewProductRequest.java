@@ -7,5 +7,6 @@ public record NewProductRequest(
     String name,
     String description,
     BigDecimal price,
-    Boolean inactive
+    Boolean active,
+    Boolean available
 ) {}

@@ -34,16 +34,16 @@ public class ProductController {
     public ResponseEntity<List<ProductSummaryResponse>> getProducts(
             @RequestParam(required = false) Long categoryId,
             @RequestParam(required = false) String keyword,
-            @RequestParam(required = false, defaultValue = "false") boolean activeOnly) {
+            @RequestParam(required = false, defaultValue = "false") boolean availableOnly) {
 
         if (keyword != null && !keyword.isBlank()) {
             // EXEMPLO: /api/product?keyword=pastel
             return ResponseEntity.ok(productService.getProductsByName(keyword));
         }
         if (categoryId != null) {
-            if (activeOnly) {
-                // EXEMPLO: /api/product?categoryId=1&activeOnly=true
-                return ResponseEntity.ok(productService.getActiveProductsByCategory(categoryId));
+            if (availableOnly) {
+                // EXEMPLO: /api/product?categoryId=1&availableOnly=true
+                return ResponseEntity.ok(productService.getAvailableProductsByCategory(categoryId));
             }
             // EXEMPLO: /api/product?categoryId=1
             return ResponseEntity.ok(productService.getProductsByCategory(categoryId));

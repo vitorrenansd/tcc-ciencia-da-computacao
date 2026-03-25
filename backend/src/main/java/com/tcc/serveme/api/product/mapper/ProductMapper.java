@@ -12,7 +12,8 @@ public class ProductMapper {
                 dto.name(),
                 dto.description(),
                 dto.price(),
-                dto.inactive()
+                dto.active(),
+                dto.available()
         );
     }
 
@@ -24,7 +25,8 @@ public class ProductMapper {
                 product.getName(),
                 product.getDescription(),
                 product.getPrice(),
-                product.isInactive()
+                product.isActive(),
+                product.isAvailable()
         );
     }
 

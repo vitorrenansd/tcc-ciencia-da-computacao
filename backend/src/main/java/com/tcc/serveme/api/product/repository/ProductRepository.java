@@ -15,5 +15,5 @@ public interface ProductRepository {
     Optional<Product> findByIdActive(Long id);
     List<Product> findAllByName(String keyword);
     List<Product> findAllByCategory(Long categoryId);
-    List<Product> findAllActiveByCategory(Long categoryId);
+    List<Product> findAllAvailableByCategory(Long categoryId);
 }

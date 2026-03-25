@@ -8,26 +8,29 @@ public class Product {
     private String name;
     private String description;
     private BigDecimal price;
-    private Boolean inactive;
+    private Boolean active;
+    private Boolean available;
 
 
     // Usado na inclusão de produto novo no banco de dados (não tem id ainda)
-    public Product(Long categoryId, String name, String description, BigDecimal price, Boolean inactive) {
+    public Product(Long categoryId, String name, String description, BigDecimal price, Boolean active, Boolean available) {
         this.categoryId = categoryId;
         this.name = name;
         this.description = description;
         this.price = price;
-        this.inactive = inactive;
+        this.active = active;
+        this.available = available;
     }
 
     // Usado para reconstrução a partir do banco de dados (construtor completo)
-    public Product(Long id, Long categoryId, String name, String description, BigDecimal price, boolean inactive) {
+    public Product(Long id, Long categoryId, String name, String description, BigDecimal price, Boolean active, Boolean available) {
         this.id = id;
         this.categoryId = categoryId;
         this.name = name;
         this.description = description;
         this.price = price;
-        this.inactive = inactive;
+        this.active = active;
+        this.available = available;
     }
 
 
@@ -51,12 +54,16 @@ public class Product {
         return this.price;
     }
 
-    public Boolean isInactive() {
-        return this.inactive;
+    public Boolean isActive() {
+        return this.active;
+    }
+
+    public Boolean isAvailable() {
+        return this.available;
     }
 
 
     public void markAsInactive() {
-        this.inactive = Boolean.TRUE;
+        this.active = Boolean.FALSE;
     }
 }

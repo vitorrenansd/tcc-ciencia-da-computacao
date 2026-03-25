@@ -19,7 +19,8 @@ public class JdbcProductRepository implements ProductRepository {
                     rs.getString("name"),
                     rs.getString("description"),
                     rs.getBigDecimal("price"),
-                    rs.getBoolean("inactive")
+                    rs.getBoolean("active"),
+                    rs.getBoolean("available")
                     // Caso adicionar novas colunas na tabela, atualizar aqui
             );
 
@@ -31,7 +32,7 @@ public class JdbcProductRepository implements ProductRepository {
     @Override
     public Optional<Product> findById(Long id) {
         String sql = """
-                SELECT id, category_id, name, description, price, inactive
+                SELECT id, category_id, name, description, price, active, available
                 FROM product
                 WHERE id = ?
                 """;
@@ -42,7 +43,7 @@ public class JdbcProductRepository implements ProductRepository {
     @Override
     public List<Product> findAll() {
         String sql = """
-                SELECT id, category_id, name, description, price, inactive
+                SELECT id, category_id, name, description, price, active, available
                 FROM product
                 LIMIT 100
                 """;
@@ -52,27 +53,27 @@ public class JdbcProductRepository implements ProductRepository {
     @Override
     public int save(Product product) {
         String sql = """
-                INSERT INTO product (category_id, name, description, price, inactive)
-                VALUES (?, UPPER(?), UPPER(?), ?, ?)
+                INSERT INTO product (category_id, name, description, price, active, available)
+                VALUES (?, UPPER(?), UPPER(?), ?, ?, ?)
                 """;
-        return jdbc.update(sql, product.getCategoryId(), product.getName(), product.getDescription(), product.getPrice(), product.isInactive());
+        return jdbc.update(sql, product.getCategoryId(), product.getName(), product.getDescription(), product.getPrice(), product.isActive(), product.isAvailable());
     }
 
     @Override
     public int update(Product product) {
         String sql = """
                 UPDATE product
-                SET category_id = ?, name = UPPER(?), description = UPPER(?), price = ?, inactive = ?
+                SET category_id = ?, name = UPPER(?), description = UPPER(?), price = ?, active = ?, available = ?
                 WHERE id = ?
                 """;
-        return jdbc.update(sql, product.getCategoryId(), product.getName(), product.getDescription(), product.getPrice(), product.isInactive(), product.getId());
+        return jdbc.update(sql, product.getCategoryId(), product.getName(), product.getDescription(), product.getPrice(), product.isActive(), product.getId(), product.isAvailable());
     }
 
     @Override
     public int softDelete(Long id) {
         String sql = """
                 UPDATE product
-                SET inactive = TRUE
+                SET active = FALSE
                 WHERE id = ?
                 """;
         return jdbc.update(sql, id);
@@ -85,10 +86,10 @@ public class JdbcProductRepository implements ProductRepository {
     @Override
     public Optional<Product> findByIdActive(Long id) {
         String sql = """
-                SELECT id, category_id, name, description, price, inactive
+                SELECT id, category_id, name, description, price, active, available
                 FROM product
                 WHERE id = ?
-                AND inactive = FALSE
+                AND active = TRUE
                 """;
         List<Product> result = jdbc.query(sql, ROW_MAPPER, id);
         return result.stream().findFirst();
@@ -97,10 +98,10 @@ public class JdbcProductRepository implements ProductRepository {
     @Override
     public List<Product> findAllByName(String keyword) {
         String sql = """
-                SELECT id, category_id, name, description, price, inactive
+                SELECT id, category_id, name, description, price, active, available
                 FROM product
                 WHERE UPPER(name) LIKE UPPER(?)
-                AND inactive = FALSE
+                AND active = TRUE
                 """;
         String searchPattern = "%" + keyword + "%";
         return jdbc.query(sql, ROW_MAPPER, searchPattern);
@@ -109,7 +110,7 @@ public class JdbcProductRepository implements ProductRepository {
     @Override
     public List<Product> findAllByCategory(Long categoryId) {
         String sql = """
-                SELECT id, category_id, name, description, price, inactive
+                SELECT id, category_id, name, description, price, active, available
                 FROM product
                 WHERE category_id = ?
                 ORDER BY name
@@ -118,12 +119,13 @@ public class JdbcProductRepository implements ProductRepository {
     }
 
     @Override
-    public List<Product> findAllActiveByCategory(Long categoryId) {
+    public List<Product> findAllAvailableByCategory(Long categoryId) {
         String sql = """
-                SELECT id, category_id, name, description, price, inactive
+                SELECT id, category_id, name, description, price, active, available
                 FROM product
                 WHERE category_id = ?
-                AND inactive = FALSE
+                AND active = TRUE
+                AND available = TRUE
                 ORDER BY name
                 """;
         return jdbc.query(sql, ROW_MAPPER, categoryId);
