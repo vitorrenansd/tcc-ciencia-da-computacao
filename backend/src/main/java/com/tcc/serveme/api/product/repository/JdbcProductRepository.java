@@ -56,17 +56,37 @@ public class JdbcProductRepository implements ProductRepository {
                 INSERT INTO product (category_id, name, description, price, active, available)
                 VALUES (?, UPPER(?), UPPER(?), ?, ?, ?)
                 """;
-        return jdbc.update(sql, product.getCategoryId(), product.getName(), product.getDescription(), product.getPrice(), product.isActive(), product.isAvailable());
+        return jdbc.update(sql,
+                product.getCategoryId(),
+                product.getName(),
+                product.getDescription(),
+                product.getPrice(),
+                product.isActive(),
+                product.isAvailable()
+        );
     }
 
     @Override
     public int update(Product product) {
         String sql = """
                 UPDATE product
-                SET category_id = ?, name = UPPER(?), description = UPPER(?), price = ?, active = ?, available = ?
+                SET category_id = ?,
+                    name = UPPER(?),
+                    description = UPPER(?),
+                    price = ?,
+                    active = ?,
+                    available = ?
                 WHERE id = ?
                 """;
-        return jdbc.update(sql, product.getCategoryId(), product.getName(), product.getDescription(), product.getPrice(), product.isActive(), product.getId(), product.isAvailable());
+        return jdbc.update(sql,
+                product.getCategoryId(),
+                product.getName(),
+                product.getDescription(),
+                product.getPrice(),
+                product.isActive(),
+                product.isAvailable(),
+                product.getId()
+        );
     }
 
     @Override
