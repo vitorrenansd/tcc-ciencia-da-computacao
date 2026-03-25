@@ -3,6 +3,7 @@ package com.tcc.serveme.api.order.controller;
 import com.tcc.serveme.api.order.dto.NewOrderRequest;
 import com.tcc.serveme.api.order.dto.OrderDetailsResponse;
 import com.tcc.serveme.api.order.dto.OrdersByStatusResponse;
+import com.tcc.serveme.api.order.dto.UpdateOrderStatusRequest;
 import com.tcc.serveme.api.order.service.OrderService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,34 +31,37 @@ public class OrderController {
         return ResponseEntity.status(HttpStatus.CREATED).body(id);
     }
 
-    @GetMapping("/pending")
-    public ResponseEntity<List<OrdersByStatusResponse>> getAllPending() {
-        return ResponseEntity.ok(orderService.getPendingOrders());
-    }
+    @GetMapping
+    public ResponseEntity<List<OrdersByStatusResponse>> getByStatus(
+            @RequestParam(required = false) String status) {
 
-    @GetMapping("/in-progress")
-    public ResponseEntity<List<OrdersByStatusResponse>> getAllInProgress() {
-        return ResponseEntity.ok(orderService.getOrdersInProgress());
-    }
-
-    @GetMapping("/served")
-    public ResponseEntity<List<OrdersByStatusResponse>> getAllServed() {
-        return ResponseEntity.ok(orderService.getServedOrders());
-    }
-
-    @GetMapping("/paid")
-    public ResponseEntity<List<OrdersByStatusResponse>> getAllPaid() {
-        return ResponseEntity.ok(orderService.getPaidOrders());
-    }
-
-    @GetMapping("/canceled")
-    public ResponseEntity<List<OrdersByStatusResponse>> getAllCanceled() {
-        return ResponseEntity.ok(orderService.getCanceledOrders());
+        if (status != null && !status.isBlank()) {
+            return ResponseEntity.ok(orderService.getOrdersByStatus(status));
+        }
+        return ResponseEntity.ok(orderService.getAllOrders());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<OrderDetailsResponse> getById(@PathVariable Long id) {
         OrderDetailsResponse response = orderService.findDetailsById(id);
         return ResponseEntity.ok(response);
+    }
+
+    @PatchMapping("/{id}/status")
+    public ResponseEntity<Void> updateStatus(
+            @PathVariable Long id,
+            @RequestBody UpdateOrderStatusRequest request) {
+
+        orderService.updateOrderStatus(id, request);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/{id}/items/{itemId}/cancel")
+    public ResponseEntity<Void> cancelItem(
+            @PathVariable Long id,
+            @PathVariable Long itemId) {
+
+        orderService.cancelOrderItem(id, itemId);
+        return ResponseEntity.noContent().build();
     }
 }

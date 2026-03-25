@@ -5,5 +5,9 @@ public enum OrderStatus {
     IN_PROGRESS,
     SERVED,
     PAID,
-    CANCELED
+    CANCELED;
+
+    public boolean isTerminal() {
+        return this == PAID || this == CANCELED;
+    }
 }
