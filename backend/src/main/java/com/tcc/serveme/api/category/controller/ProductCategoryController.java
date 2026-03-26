@@ -1,7 +1,7 @@
 package com.tcc.serveme.api.category.controller;
 
 import com.tcc.serveme.api.category.dto.NewProductCategoryRequest;
-import com.tcc.serveme.api.category.dto.ProductCategoryResponse;
+import com.tcc.serveme.api.category.dto.ProductCategoryDetailsResponse;
 import com.tcc.serveme.api.category.dto.UpdateProductCategoryRequest;
 import com.tcc.serveme.api.category.service.ProductCategoryService;
 
@@ -31,7 +31,7 @@ public class ProductCategoryController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ProductCategoryResponse>> getProductCategories(
+    public ResponseEntity<?> getProductCategories(
             @RequestParam(required = false) String keyword,
             @RequestParam(required = false, defaultValue = "false") boolean activeOnly) {
 
