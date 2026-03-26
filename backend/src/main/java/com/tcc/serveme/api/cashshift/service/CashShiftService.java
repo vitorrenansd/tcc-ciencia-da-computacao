@@ -36,7 +36,7 @@ public class CashShiftService {
     @Transactional
     public void closeCashShift() {
         CashShift shift = cashShiftRepo.findOpenShift()
-                .orElseThrow(() -> new NotFoundException("Nenhum turno aberto no momento."));
+                .orElseThrow(() -> new ConflictException("Nenhum turno aberto no momento."));
 
         cashShiftRepo.closeShift(shift.getId(), LocalDateTime.now());
     }

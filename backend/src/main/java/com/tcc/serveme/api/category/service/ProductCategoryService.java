@@ -29,9 +29,6 @@ public class ProductCategoryService {
     // Cria categoria de produto nova no banco
     @Transactional
     public void createProductCategory(NewProductCategoryRequest request) {
-        if (request.name() == null || request.name().isBlank()) {
-            throw new BadRequestException("Nome da categoria é obrigatório");
-        }
         ProductCategory productCategory = ProductCategoryMapper.toModel(request);
         productCategoryRepo.save(productCategory);
     }

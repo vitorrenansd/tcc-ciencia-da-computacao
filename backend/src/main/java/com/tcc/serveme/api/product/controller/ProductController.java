@@ -6,6 +6,7 @@ import com.tcc.serveme.api.product.dto.ProductSummaryResponse;
 import com.tcc.serveme.api.product.dto.UpdateProductRequest;
 import com.tcc.serveme.api.product.service.ProductService;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +27,7 @@ public class ProductController {
 
 
     @PostMapping
-    public ResponseEntity<?> create(@RequestBody NewProductRequest request) {
+    public ResponseEntity<?> create(@Valid @RequestBody NewProductRequest request) {
             productService.createProduct(request);
             return ResponseEntity.status(HttpStatus.CREATED).build();
     }
@@ -62,7 +63,7 @@ public class ProductController {
     @PutMapping("/{id}")
     public ResponseEntity<Void> update(
             @PathVariable Long id,
-            @RequestBody UpdateProductRequest request) {
+            @Valid @RequestBody UpdateProductRequest request) {
 
         productService.updateProduct(id, request);
         return ResponseEntity.noContent().build();

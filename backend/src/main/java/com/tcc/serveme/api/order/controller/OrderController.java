@@ -6,6 +6,7 @@ import com.tcc.serveme.api.order.dto.OrdersByStatusResponse;
 import com.tcc.serveme.api.order.dto.UpdateOrderStatusRequest;
 import com.tcc.serveme.api.order.service.OrderService;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +27,7 @@ public class OrderController {
 
 
     @PostMapping
-    public ResponseEntity<?> create(@RequestBody NewOrderRequest request) {
+    public ResponseEntity<?> create(@Valid @RequestBody NewOrderRequest request) {
         Long id = orderService.createOrder(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(id);
     }
@@ -50,7 +51,7 @@ public class OrderController {
     @PatchMapping("/{id}/status")
     public ResponseEntity<Void> updateStatus(
             @PathVariable Long id,
-            @RequestBody UpdateOrderStatusRequest request) {
+            @Valid @RequestBody UpdateOrderStatusRequest request) {
 
         orderService.updateOrderStatus(id, request);
         return ResponseEntity.noContent().build();
