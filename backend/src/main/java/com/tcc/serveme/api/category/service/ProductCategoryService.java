@@ -56,7 +56,7 @@ public class ProductCategoryService {
         ProductCategory updated = new ProductCategory(
                 category.getId(),
                 request.name(),
-                request.inactive()
+                request.active()
         );
         productCategoryRepo.update(updated);
     }

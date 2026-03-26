@@ -10,7 +10,7 @@ public class ProductCategoryMapper {
     public static ProductCategory toModel(NewProductCategoryRequest dto) {
         return new ProductCategory(
                 dto.name(),
-                dto.inactive()
+                dto.active()
         );
     }
 

@@ -1,8 +1,8 @@
 -- CATEGORIA
-INSERT INTO product_category (name, inactive) VALUES
-('GERAL', FALSE),
-('PORCOES', FALSE),
-('BEBIDAS', FALSE);
+INSERT INTO product_category (name, active) VALUES
+('GERAL', TRUE),
+('PORCOES', TRUE),
+('BEBIDAS', TRUE);
 
 -- PRODUTOS
 INSERT INTO product (category_id, name, description, price, active, available) VALUES

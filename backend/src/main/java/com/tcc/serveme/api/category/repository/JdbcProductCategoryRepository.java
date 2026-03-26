@@ -17,7 +17,7 @@ public class JdbcProductCategoryRepository implements ProductCategoryRepository 
             (rs, rowNum) -> new ProductCategory(
                     rs.getLong("id"),
                     rs.getString("name"),
-                    rs.getBoolean("inactive")
+                    rs.getBoolean("active")
                     // Caso adicionar novas colunas no banco, atualizar aqui
             );
 
@@ -29,7 +29,7 @@ public class JdbcProductCategoryRepository implements ProductCategoryRepository 
     @Override
     public Optional<ProductCategory> findById(Long id) {
         String sql = """
-                SELECT id, name, inactive
+                SELECT id, name, active
                 FROM product_category
                 WHERE id = ?
                 """;
@@ -40,7 +40,7 @@ public class JdbcProductCategoryRepository implements ProductCategoryRepository 
     @Override
     public List<ProductCategory> findAll() {
         String sql = """
-                SELECT id, name, inactive
+                SELECT id, name, active
                 FROM product_category
                 LIMIT 100
                 """;
@@ -50,27 +50,27 @@ public class JdbcProductCategoryRepository implements ProductCategoryRepository 
     @Override
     public int save(ProductCategory productCategory) {
         String sql = """
-                INSERT INTO product_category (name, inactive)
+                INSERT INTO product_category (name, active)
                 VALUES (UPPER(?), ?)
                 """;
-        return jdbc.update(sql, productCategory.getName(), productCategory.isInactive());
+        return jdbc.update(sql, productCategory.getName(), productCategory.isActive());
     }
 
     @Override
     public int update(ProductCategory productCategory) {
         String sql = """
                 UPDATE product_category
-                SET name = UPPER(?), inactive = ?
+                SET name = UPPER(?), active = ?
                 WHERE id = ?
                 """;
-        return jdbc.update(sql, productCategory.getName(), productCategory.isInactive(), productCategory.getId());
+        return jdbc.update(sql, productCategory.getName(), productCategory.isActive(), productCategory.getId());
     }
 
     @Override
     public int softDelete(Long id) {
         String sql = """
                 UPDATE product_category
-                SET inactive = TRUE
+                SET active = FALSE
                 WHERE id = ?
                 """;
         return jdbc.update(sql, id);
@@ -83,9 +83,9 @@ public class JdbcProductCategoryRepository implements ProductCategoryRepository 
     @Override
     public List<ProductCategory> findAllActive() {
         String sql = """
-                SELECT id, name, inactive
+                SELECT id, name, active
                 FROM product_category
-                WHERE inactive = FALSE
+                WHERE active = TRUE
                 """;
         return jdbc.query(sql, ROW_MAPPER);
     }
@@ -93,7 +93,7 @@ public class JdbcProductCategoryRepository implements ProductCategoryRepository 
     @Override
     public List<ProductCategory> findAllByName(String keyword) {
         String sql = """
-                SELECT id, name, inactive
+                SELECT id, name, active
                 FROM product_category
                 WHERE UPPER(name) LIKE UPPER(?)
                 """;

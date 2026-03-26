@@ -47,6 +47,12 @@ public class ProductCategoryController {
         return ResponseEntity.ok(productCategoryService.getAllCategories());
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<ProductCategoryDetailsResponse> getById(@PathVariable Long id) {
+        ProductCategoryDetailsResponse response = productCategoryService.getById(id);
+        return ResponseEntity.ok(response);
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<Void> update(
             @PathVariable Long id,

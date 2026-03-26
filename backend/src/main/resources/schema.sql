@@ -1,7 +1,7 @@
 CREATE TABLE product_category (
     id IDENTITY PRIMARY KEY,
     name VARCHAR(40) NOT NULL,
-    inactive BOOLEAN DEFAULT FALSE
+    active BOOLEAN DEFAULT TRUE
 );
 
 CREATE TABLE cash_shift (
