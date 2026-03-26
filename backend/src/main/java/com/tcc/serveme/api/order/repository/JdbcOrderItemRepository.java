@@ -36,7 +36,14 @@ public class JdbcOrderItemRepository implements OrderItemRepository {
                 INSERT INTO order_item (order_id, product_id, product_name, product_price, quantity, notes)
                 VALUES (?, ?, UPPER(?), ?, ?, UPPER(?))
                 """;
-        return jdbc.update(sql, orderItem.getOrderId(), orderItem.getProductId(), orderItem.getProductName(), orderItem.getProductPrice(), orderItem.getQuantity(), orderItem.getNotes());
+        return jdbc.update(sql,
+                orderItem.getOrderId(),
+                orderItem.getProductId(),
+                orderItem.getProductName(),
+                orderItem.getProductPrice(),
+                orderItem.getQuantity(),
+                orderItem.getNotes()
+        );
     }
     
     // ************************

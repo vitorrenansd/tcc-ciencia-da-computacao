@@ -5,6 +5,7 @@ import com.tcc.serveme.api.exception.NotFoundException;
 import com.tcc.serveme.api.product.dto.NewProductRequest;
 import com.tcc.serveme.api.product.dto.ProductDetailsResponse;
 import com.tcc.serveme.api.product.dto.ProductSummaryResponse;
+import com.tcc.serveme.api.product.dto.UpdateProductRequest;
 import com.tcc.serveme.api.product.mapper.ProductMapper;
 import com.tcc.serveme.api.product.entity.Product;
 import com.tcc.serveme.api.category.entity.ProductCategory;
@@ -37,6 +38,34 @@ public class ProductService {
 
         Product product = ProductMapper.toModel(request);
         productRepo.save(product);
+    }
+
+    // Atualiza os dados de um produto existente
+    @Transactional
+    public void updateProduct(Long id, UpdateProductRequest request) {
+        Product product = productRepo.findById(id)
+                .orElseThrow(() -> new NotFoundException("Produto não encontrado. ID: " + id));
+
+        productCategoryRepo.findById(request.categoryId())
+                .orElseThrow(() -> new BadRequestException("Categoria não encontrada. ID: " + request.categoryId()));
+
+        Product updated = new Product(
+                product.getId(),
+                request.categoryId(),
+                request.name(),
+                request.description(),
+                request.price(),
+                request.active(),
+                request.available()
+        );
+        productRepo.update(updated);
+    }
+
+    // Inativa um produto (delete lógico)
+    public void deleteProduct(Long id) {
+        productRepo.findById(id)
+                .orElseThrow(() -> new NotFoundException("Produto não encontrado. ID: " + id));
+        productRepo.softDelete(id);
     }
 
     // Retorna um List com todos os produtos (tem LIMIT no repo)
@@ -74,8 +103,8 @@ public class ProductService {
     }
 
     // Retorna um List com os produtos ativos da categoria
-    public List<ProductSummaryResponse> getActiveProductsByCategory(Long categoryId) {
-        return productRepo.findAllActiveByCategory(categoryId)
+    public List<ProductSummaryResponse> getAvailableProductsByCategory(Long categoryId) {
+        return productRepo.findAllAvailableByCategory(categoryId)
                 .stream()
                 .map(ProductMapper::toSummaryResponse)  // Mapeia o retorno do repo para um DTO valido
                 .toList();

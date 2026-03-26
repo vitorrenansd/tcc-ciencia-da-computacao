@@ -9,5 +9,6 @@ public record ProductDetailsResponse(
         String name,
         String description,
         BigDecimal price,
-        Boolean inactive
+        Boolean active,
+        Boolean available
 ) {}

@@ -78,9 +78,40 @@ public class JdbcOrderRepository implements OrderRepository {
         return keyHolder.getKeyAs(Long.class);
     }
 
+    @Override
+    public int updateStatus(Long id, OrderStatus status) {
+        String sql = """
+            UPDATE orders
+            SET status = ?
+            WHERE id = ?
+            """;
+        return jdbc.update(sql, status.name(), id);
+    }
+
     // ************************
     //  Specific queries below
     // ************************
+
+    @Override
+    public List<Order> findAllByShiftIdAndStatus(Long cashShiftId, OrderStatus status) {
+        String sql = """
+            SELECT id, cash_shift_id, table_number, customer_name, total_price, status, created_at
+            FROM orders
+            WHERE cash_shift_id = ?
+            AND status = ?
+            """;
+        return jdbc.query(sql, ROW_MAPPER, cashShiftId, status.name());
+    }
+
+    @Override
+    public List<Order> findAllByShiftId(Long cashShiftId) {
+        String sql = """
+            SELECT id, cash_shift_id, table_number, customer_name, total_price, status, created_at
+            FROM orders
+            WHERE cash_shift_id = ?
+            """;
+        return jdbc.query(sql, ROW_MAPPER, cashShiftId);
+    }
 
     @Override
     public List<Order> findAllPendingByShiftId(Long cashShiftId) {
@@ -135,45 +166,5 @@ public class JdbcOrderRepository implements OrderRepository {
                 AND status IN ('CANCELED')
                 """;
         return jdbc.query(sql, ROW_MAPPER, cashShiftId);
-    }
-
-    @Override
-    public int markAsInProgress(Long id) {
-        String sql = """
-                UPDATE orders
-                SET status = 'IN_PROGRESS'
-                WHERE id = ?
-                """;
-        return jdbc.update(sql, id);
-    }
-
-    @Override
-    public int markAsServed(Long id) {
-        String sql = """
-                UPDATE orders
-                SET status = 'SERVED'
-                WHERE id = ?
-                """;
-        return jdbc.update(sql, id);
-    }
-
-    @Override
-    public int markAsPaid(Long id) {
-        String sql = """
-                UPDATE orders
-                SET status = 'PAID'
-                WHERE id = ?
-                """;
-        return jdbc.update(sql, id);
-    }
-
-    @Override
-    public int cancel(Long id) {
-        String sql = """
-                UPDATE orders
-                SET status = 'CANCELED'
-                WHERE id = ?
-                """;
-        return jdbc.update(sql, id);
     }
 }
