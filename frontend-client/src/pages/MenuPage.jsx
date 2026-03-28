@@ -1,0 +1,107 @@
+import { useState, useEffect } from "react";
+import {
+  fetchActiveCategories,
+  fetchProductsByCategory,
+} from "../services/api";
+import CategoryTopbar from "../components/CategoryTopbar";
+import ProductCard from "../components/ProductCard";
+import CartBar from "../components/CartBar";
+import "./MenuPage.css";
+
+export default function MenuPage({ cart, addToCart, setQuantity }) {
+  const [categories, setCategories] = useState([]);
+  const [selectedCategoryId, setSelectedCategoryId] = useState(null);
+  const [products, setProducts] = useState([]);
+  const [loadingCategories, setLoadingCategories] = useState(true);
+  const [loadingProducts, setLoadingProducts] = useState(false);
+  const [error, setError] = useState(null);
+
+  // Carrega categorias ao montar
+  useEffect(() => {
+    fetchActiveCategories()
+      .then((data) => {
+        setCategories(data);
+        if (data.length > 0) setSelectedCategoryId(data[0].id);
+      })
+      .catch(() => setError("Não foi possível carregar o cardápio."))
+      .finally(() => setLoadingCategories(false));
+  }, []);
+
+  // Carrega produtos quando muda a categoria selecionada
+  useEffect(() => {
+    if (!selectedCategoryId) return;
+    setLoadingProducts(true);
+    fetchProductsByCategory(selectedCategoryId)
+      .then(setProducts)
+      .catch(() => setError("Erro ao carregar produtos."))
+      .finally(() => setLoadingProducts(false));
+  }, [selectedCategoryId]);
+
+  function getCartQuantity(productId) {
+    return cart.find((i) => i.productId === productId)?.quantity ?? 0;
+  }
+
+  if (loadingCategories) {
+    return (
+      <div className="page-container menu-loading">
+        <div className="menu-loading__spinner" />
+        <p>Carregando cardápio...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="page-container menu-error">
+        <p>{error}</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="page-container">
+      {/* Header */}
+      <header className="menu-header">
+        <div className="menu-header__brand">
+          <span className="menu-header__logo">🍽️</span>
+          <span className="menu-header__title">serve-me</span>
+        </div>
+      </header>
+
+      {/* Carrossel de categorias */}
+      <CategoryTopbar
+        categories={categories}
+        selectedId={selectedCategoryId}
+        onSelect={setSelectedCategoryId}
+      />
+
+      {/* Grid de produtos */}
+      <main className="menu-main">
+        {loadingProducts ? (
+          <div className="menu-products-loading">
+            <div className="menu-loading__spinner" />
+          </div>
+        ) : products.length === 0 ? (
+          <div className="menu-empty">
+            <p>Nenhum produto disponível nesta categoria.</p>
+          </div>
+        ) : (
+          <div className="product-grid">
+            {products.map((product) => (
+              <ProductCard
+                key={product.id}
+                product={product}
+                quantity={getCartQuantity(product.id)}
+                onAdd={() => addToCart(product)}
+                onSetQuantity={setQuantity}
+              />
+            ))}
+          </div>
+        )}
+      </main>
+
+      {/* Barra do carrinho */}
+      <CartBar cart={cart} />
+    </div>
+  );
+}

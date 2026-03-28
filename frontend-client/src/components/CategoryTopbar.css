@@ -1,0 +1,57 @@
+.category-topbar {
+  background: var(--white);
+  border-bottom: 1.5px solid var(--gray-100);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.category-topbar__list {
+  display: flex;
+  gap: 6px;
+  padding: 10px 16px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  cursor: grab;
+  user-select: none;
+}
+
+.category-topbar__list:active {
+  cursor: grabbing;
+}
+
+/* Esconde scrollbar mas mantém funcionalidade */
+.category-topbar__list::-webkit-scrollbar {
+  display: none;
+}
+.category-topbar__list {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.category-topbar__item {
+  flex-shrink: 0;
+  background: var(--gray-100);
+  color: var(--text-secondary);
+  font-family: "Poppins", sans-serif;
+  font-size: 0.78rem;
+  font-weight: 500;
+  padding: 6px 16px;
+  border-radius: 99px;
+  border: 1.5px solid transparent;
+  transition: all 0.18s;
+  white-space: nowrap;
+}
+
+.category-topbar__item:hover {
+  background: var(--blue-light);
+  color: var(--blue-primary);
+}
+
+.category-topbar__item.active {
+  background: var(--blue-primary);
+  color: var(--white);
+  border-color: var(--blue-primary);
+  font-weight: 600;
+}

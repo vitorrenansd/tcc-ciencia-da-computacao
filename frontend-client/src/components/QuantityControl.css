@@ -1,0 +1,65 @@
+.quantity-control {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.quantity-control__btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-weight: 700;
+  line-height: 1;
+  transition:
+    background 0.15s,
+    transform 0.1s;
+  flex-shrink: 0;
+}
+
+.quantity-control__btn:active {
+  transform: scale(0.9);
+}
+
+/* Tamanho pequeno (cards) */
+.quantity-control--sm .quantity-control__btn {
+  width: 26px;
+  height: 26px;
+  font-size: 1rem;
+}
+
+/* Tamanho grande (detalhe) */
+.quantity-control--lg .quantity-control__btn {
+  width: 36px;
+  height: 36px;
+  font-size: 1.25rem;
+}
+
+.quantity-control__btn--add {
+  background: var(--blue-primary);
+  color: var(--white);
+}
+.quantity-control__btn--add:hover {
+  background: var(--blue-dark);
+}
+
+.quantity-control__btn--remove {
+  background: var(--gray-100);
+  color: var(--text-primary);
+}
+.quantity-control__btn--remove:hover {
+  background: var(--gray-200);
+}
+
+.quantity-control__value {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  min-width: 16px;
+  text-align: center;
+}
+
+.quantity-control--lg .quantity-control__value {
+  font-size: 1.1rem;
+  min-width: 24px;
+}
