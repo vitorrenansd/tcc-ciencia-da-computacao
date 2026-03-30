@@ -76,7 +76,6 @@ public class JdbcProductRepository implements ProductRepository {
                     name = UPPER(?),
                     description = UPPER(?),
                     price = ?,
-                    image_filename = ?,
                     active = ?,
                     available = ?
                 WHERE id = ?
@@ -86,11 +85,16 @@ public class JdbcProductRepository implements ProductRepository {
                 product.getName(),
                 product.getDescription(),
                 product.getPrice(),
-                product.getImageFilename(),
                 product.isActive(),
                 product.isAvailable(),
                 product.getId()
         );
+    }
+
+    @Override
+    public void updateImageFilename(Long id, String filename) {
+        String sql = "UPDATE product SET image_filename = ? WHERE id = ?";
+        jdbc.update(sql, filename, id);
     }
 
     @Override

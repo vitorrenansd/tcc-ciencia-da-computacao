@@ -16,14 +16,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class ProductService {
     private final ProductRepository productRepo;
     private final ProductCategoryRepository productCategoryRepo;
 
+    @Value("${serve-me.images.path}")
+    private String imagesPath;
     @Value("${serve-me.images.base-url}")
     private String imageBaseUrl;
 
@@ -64,6 +72,42 @@ public class ProductService {
                 request.available()
         );
         productRepo.update(updated);
+    }
+
+    public void uploadImage(Long id, MultipartFile file) {
+        // Verifica se produto existe
+        Product product = productRepo.findById(id)
+                .orElseThrow(() -> new NotFoundException("Produto não encontrado. ID: " + id));
+
+        // Valida se é imagem
+        String contentType = file.getContentType();
+        if (contentType == null || !contentType.startsWith("image/")) {
+            throw new BadRequestException("Formato de arquivo inválido.");
+        }
+
+        // Gera nome único com UUID mantendo a extensão original
+        String extension = StringUtils.getFilenameExtension(file.getOriginalFilename());
+        String filename = UUID.randomUUID().toString() + "." + extension;
+
+        // Salva o arquivo no diretório configurado
+        try {
+            Path destination = Paths.get(imagesPath).resolve(filename);
+            Files.createDirectories(destination.getParent());
+            file.transferTo(destination.toFile());
+        } catch (IOException e) {
+            throw new RuntimeException("Erro ao salvar imagem.", e);
+        }
+
+        // Se já havia imagem anterior, deleta do disco
+        if (product.getImageFilename() != null) {
+            try {
+                Path old = Paths.get(imagesPath).resolve(product.getImageFilename());
+                Files.deleteIfExists(old);
+            } catch (IOException ignored) {}
+        }
+
+        // Atualiza o filename no banco
+        productRepo.updateImageFilename(id, filename);
     }
 
     // Inativa um produto (delete lógico)

@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -66,6 +67,15 @@ public class ProductController {
             @Valid @RequestBody UpdateProductRequest request) {
 
         productService.updateProduct(id, request);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/{id}/image")
+    public ResponseEntity<Void> uploadImage(
+            @PathVariable Long id,
+            @RequestParam("file") MultipartFile file) {
+
+        productService.uploadImage(id, file);
         return ResponseEntity.noContent().build();
     }
 
