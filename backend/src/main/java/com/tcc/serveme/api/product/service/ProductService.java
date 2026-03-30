@@ -117,6 +117,26 @@ public class ProductService {
         productRepo.softDelete(id);
     }
 
+    public void deleteImage(Long id) {
+        Product product = productRepo.findById(id)
+                .orElseThrow(() -> new NotFoundException("Produto não encontrado. ID: " + id));
+
+        if (product.getImageFilename() == null) {
+            throw new BadRequestException("Produto não possui imagem.");
+        }
+
+        // Deleta do disco
+        try {
+            Path path = Paths.get(imagesPath).resolve(product.getImageFilename());
+            Files.deleteIfExists(path);
+        } catch (IOException e) {
+            throw new RuntimeException("Erro ao deletar imagem.", e);
+        }
+
+        // Remove o filename do banco
+        productRepo.updateImageFilename(id, null);
+    }
+
     // Retorna um List com todos os produtos (tem LIMIT no repo)
     public List<ProductSummaryResponse> getAllProducts() {
         return productRepo.findAll()
