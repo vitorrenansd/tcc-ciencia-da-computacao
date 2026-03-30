@@ -17,6 +17,7 @@ CREATE TABLE product (
     name VARCHAR(40) NOT NULL,
     description VARCHAR(255),
     price NUMERIC(10,2) NOT NULL,
+    image_filename VARCHAR(500) NULL,
     active BOOLEAN DEFAULT TRUE,
     available BOOLEAN DEFAULT TRUE,
 

@@ -13,6 +13,7 @@ import com.tcc.serveme.api.category.repository.ProductCategoryRepository;
 import com.tcc.serveme.api.product.repository.ProductRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +23,9 @@ import java.util.List;
 public class ProductService {
     private final ProductRepository productRepo;
     private final ProductCategoryRepository productCategoryRepo;
+
+    @Value("${serve-me.images.base-url}")
+    private String imageBaseUrl;
 
     @Autowired
     public ProductService(ProductRepository productRepo, ProductCategoryRepository productCategoryRepo) {
@@ -55,6 +59,7 @@ public class ProductService {
                 request.name(),
                 request.description(),
                 request.price(),
+                request.imageUrl(),
                 request.active(),
                 request.available()
         );
@@ -72,7 +77,7 @@ public class ProductService {
     public List<ProductSummaryResponse> getAllProducts() {
         return productRepo.findAll()
                 .stream()
-                .map(ProductMapper::toSummaryResponse)
+                .map(p -> ProductMapper.toSummaryResponse(p, imageBaseUrl))
                 .toList();
     }
 
@@ -83,14 +88,14 @@ public class ProductService {
         ProductCategory category = productCategoryRepo.findById(product.getCategoryId())
                 .orElseThrow(() -> new NotFoundException("Categoria não encontrada. ID: " + id));
 
-        return ProductMapper.toDetailsResponse(product, category.getName());
+        return ProductMapper.toDetailsResponse(product, category.getName(), imageBaseUrl);
     }
 
     // Retorna um List com os produtos da keyword digitada (pesquisa por nome)
     public List<ProductSummaryResponse> getProductsByName(String keyword) {
         return productRepo.findAllByName(keyword)
                 .stream()
-                .map(ProductMapper::toSummaryResponse)
+                .map(p -> ProductMapper.toSummaryResponse(p, imageBaseUrl))
                 .toList();
     }
 
@@ -98,7 +103,7 @@ public class ProductService {
     public List<ProductSummaryResponse> getProductsByCategory(Long categoryId) {
         return productRepo.findAllByCategory(categoryId)
                 .stream()
-                .map(ProductMapper::toSummaryResponse)
+                .map(p -> ProductMapper.toSummaryResponse(p, imageBaseUrl))
                 .toList();
     }
 
@@ -106,7 +111,7 @@ public class ProductService {
     public List<ProductSummaryResponse> getAvailableProductsByCategory(Long categoryId) {
         return productRepo.findAllAvailableByCategory(categoryId)
                 .stream()
-                .map(ProductMapper::toSummaryResponse)  // Mapeia o retorno do repo para um DTO valido
+                .map(p -> ProductMapper.toSummaryResponse(p, imageBaseUrl))  // Mapeia o retorno do repo para um DTO valido
                 .toList();
     }
 }

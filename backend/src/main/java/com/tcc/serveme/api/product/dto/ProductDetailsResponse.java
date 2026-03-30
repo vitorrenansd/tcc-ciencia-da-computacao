@@ -9,6 +9,7 @@ public record ProductDetailsResponse(
         String name,
         String description,
         BigDecimal price,
+        String imageUrl,
         Boolean active,
         Boolean available
 ) {}

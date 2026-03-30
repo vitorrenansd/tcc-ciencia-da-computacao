@@ -8,27 +8,30 @@ public class Product {
     private String name;
     private String description;
     private BigDecimal price;
+    private String imageFilename;
     private Boolean active;
     private Boolean available;
 
 
     // Usado na inclusão de produto novo no banco de dados (não tem id ainda)
-    public Product(Long categoryId, String name, String description, BigDecimal price, Boolean active, Boolean available) {
+    public Product(Long categoryId, String name, String description, BigDecimal price, String imageFilename, Boolean active, Boolean available) {
         this.categoryId = categoryId;
         this.name = name;
         this.description = description;
         this.price = price;
+        this.imageFilename = imageFilename;
         this.active = active;
         this.available = available;
     }
 
     // Usado para reconstrução a partir do banco de dados (construtor completo)
-    public Product(Long id, Long categoryId, String name, String description, BigDecimal price, Boolean active, Boolean available) {
+    public Product(Long id, Long categoryId, String name, String description, BigDecimal price, String imageFilename, Boolean active, Boolean available) {
         this.id = id;
         this.categoryId = categoryId;
         this.name = name;
         this.description = description;
         this.price = price;
+        this.imageFilename = imageFilename;
         this.active = active;
         this.available = available;
     }
@@ -52,6 +55,10 @@ public class Product {
 
     public BigDecimal getPrice() {
         return this.price;
+    }
+
+    public String getImageFilename() {
+        return this.imageFilename;
     }
 
     public Boolean isActive() {

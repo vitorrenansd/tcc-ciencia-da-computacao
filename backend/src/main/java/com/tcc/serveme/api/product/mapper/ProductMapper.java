@@ -12,12 +12,16 @@ public class ProductMapper {
                 dto.name(),
                 dto.description(),
                 dto.price(),
+                dto.imageUrl(),
                 dto.active(),
                 dto.available()
         );
     }
 
-    public static ProductDetailsResponse toDetailsResponse(Product product, String categoryName) {
+    public static ProductDetailsResponse toDetailsResponse(Product product, String categoryName, String baseUrl) {
+        String imageUrl = product.getImageFilename() != null
+                ? baseUrl + product.getImageFilename()
+                : null;
         return new ProductDetailsResponse(
                 product.getId(),
                 product.getCategoryId(),
@@ -25,17 +29,22 @@ public class ProductMapper {
                 product.getName(),
                 product.getDescription(),
                 product.getPrice(),
+                imageUrl,
                 product.isActive(),
                 product.isAvailable()
         );
     }
 
 
-    public static ProductSummaryResponse toSummaryResponse(Product product) {
+    public static ProductSummaryResponse toSummaryResponse(Product product, String baseUrl) {
+        String imageUrl = product.getImageFilename() != null
+                ? baseUrl + product.getImageFilename()
+                : null;
         return new ProductSummaryResponse(
                 product.getId(),
                 product.getName(),
-                product.getPrice()
+                product.getPrice(),
+                imageUrl
         );
     }
 

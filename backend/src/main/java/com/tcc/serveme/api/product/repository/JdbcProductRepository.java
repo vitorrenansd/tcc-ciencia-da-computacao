@@ -19,6 +19,7 @@ public class JdbcProductRepository implements ProductRepository {
                     rs.getString("name"),
                     rs.getString("description"),
                     rs.getBigDecimal("price"),
+                    rs.getString("image_filename"),
                     rs.getBoolean("active"),
                     rs.getBoolean("available")
                     // Caso adicionar novas colunas na tabela, atualizar aqui
@@ -32,7 +33,7 @@ public class JdbcProductRepository implements ProductRepository {
     @Override
     public Optional<Product> findById(Long id) {
         String sql = """
-                SELECT id, category_id, name, description, price, active, available
+                SELECT id, category_id, name, description, price, image_filename, active, available
                 FROM product
                 WHERE id = ?
                 """;
@@ -43,7 +44,7 @@ public class JdbcProductRepository implements ProductRepository {
     @Override
     public List<Product> findAll() {
         String sql = """
-                SELECT id, category_id, name, description, price, active, available
+                SELECT id, category_id, name, description, price, image_filename, active, available
                 FROM product
                 LIMIT 100
                 """;
@@ -53,14 +54,15 @@ public class JdbcProductRepository implements ProductRepository {
     @Override
     public int save(Product product) {
         String sql = """
-                INSERT INTO product (category_id, name, description, price, active, available)
-                VALUES (?, UPPER(?), UPPER(?), ?, ?, ?)
+                INSERT INTO product (category_id, name, description, price, image_filename, active, available)
+                VALUES (?, UPPER(?), UPPER(?), ?, ?, ?, ?)
                 """;
         return jdbc.update(sql,
                 product.getCategoryId(),
                 product.getName(),
                 product.getDescription(),
                 product.getPrice(),
+                product.getImageFilename(),
                 product.isActive(),
                 product.isAvailable()
         );
@@ -74,6 +76,7 @@ public class JdbcProductRepository implements ProductRepository {
                     name = UPPER(?),
                     description = UPPER(?),
                     price = ?,
+                    image_filename = ?,
                     active = ?,
                     available = ?
                 WHERE id = ?
@@ -83,6 +86,7 @@ public class JdbcProductRepository implements ProductRepository {
                 product.getName(),
                 product.getDescription(),
                 product.getPrice(),
+                product.getImageFilename(),
                 product.isActive(),
                 product.isAvailable(),
                 product.getId()
@@ -106,7 +110,7 @@ public class JdbcProductRepository implements ProductRepository {
     @Override
     public Optional<Product> findByIdActive(Long id) {
         String sql = """
-                SELECT id, category_id, name, description, price, active, available
+                SELECT id, category_id, name, description, price, image_filename, active, available
                 FROM product
                 WHERE id = ?
                 AND active = TRUE
@@ -118,7 +122,7 @@ public class JdbcProductRepository implements ProductRepository {
     @Override
     public List<Product> findAllByName(String keyword) {
         String sql = """
-                SELECT id, category_id, name, description, price, active, available
+                SELECT id, category_id, name, description, price, image_filename, active, available
                 FROM product
                 WHERE UPPER(name) LIKE UPPER(?)
                 AND active = TRUE
@@ -130,7 +134,7 @@ public class JdbcProductRepository implements ProductRepository {
     @Override
     public List<Product> findAllByCategory(Long categoryId) {
         String sql = """
-                SELECT id, category_id, name, description, price, active, available
+                SELECT id, category_id, name, description, price, image_filename, active, available
                 FROM product
                 WHERE category_id = ?
                 ORDER BY name
@@ -141,7 +145,7 @@ public class JdbcProductRepository implements ProductRepository {
     @Override
     public List<Product> findAllAvailableByCategory(Long categoryId) {
         String sql = """
-                SELECT id, category_id, name, description, price, active, available
+                SELECT id, category_id, name, description, price, image_filename, active, available
                 FROM product
                 WHERE category_id = ?
                 AND active = TRUE

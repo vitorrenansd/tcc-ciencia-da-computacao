@@ -17,6 +17,8 @@ public record UpdateProductRequest(
         @Positive(message = "Preço deve ser maior que zero")
         BigDecimal price,
 
+        String imageUrl, // sem anotação Jakarta, é opcional
+
         @NotNull(message = "Campo active é obrigatório")
         Boolean active,
 
