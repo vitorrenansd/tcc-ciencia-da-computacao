@@ -19,7 +19,17 @@ export default function ProductCard({
 
   return (
     <div className="product-card" onClick={handleCardClick}>
-      <div className="product-card__image img-placeholder">🍽️</div>
+      <div className="product-card__image img-placeholder">
+        {product.imageUrl ? (
+          <img
+            src={product.imageUrl}
+            alt={product.name}
+            style={{ width: "100%", height: "100%", objectFit: "cover" }}
+          />
+        ) : (
+          "🍽️"
+        )}
+      </div>
       <div className="product-card__body">
         <p className="product-card__name">{formatTitle(product.name)}</p>
         <div className="product-card__footer">

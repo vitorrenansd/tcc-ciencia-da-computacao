@@ -29,6 +29,7 @@ export default function App() {
           price: product.price,
           quantity,
           notes,
+          imageUrl: product.imageUrl ?? null,
         },
       ];
     });
