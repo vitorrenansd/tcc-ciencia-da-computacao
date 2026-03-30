@@ -10,6 +10,7 @@ public interface ProductRepository {
     List<Product> findAll();
     int save(Product product);
     int update(Product product);
+    void updateImageFilename(Long id, String filename);
     int softDelete(Long id);
 
     Optional<Product> findByIdActive(Long id);

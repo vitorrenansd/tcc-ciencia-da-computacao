@@ -52,7 +52,15 @@ export default function ProductDetailPage({ cart, addToCart, setQuantity }) {
         >
           ←
         </button>
-        <span className="detail-image__emoji">🍽️</span>
+        {product.imageUrl ? (
+          <img
+            src={product.imageUrl}
+            alt={product.name}
+            className="detail-image__img"
+          />
+        ) : (
+          <span className="detail-image__emoji">🍽️</span>
+        )}
       </div>
 
       {/* Conteúdo */}

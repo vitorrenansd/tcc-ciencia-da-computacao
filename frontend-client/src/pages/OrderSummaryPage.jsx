@@ -31,7 +31,21 @@ export default function OrderSummaryPage({ cart, setQuantity }) {
         <div className="summary-items">
           {cart.map((item) => (
             <div key={item.productId} className="summary-item">
-              <div className="summary-item__image img-placeholder">🍽️</div>
+              <div className="summary-item__image img-placeholder">
+                {item.imageUrl ? (
+                  <img
+                    src={item.imageUrl}
+                    alt={item.name}
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "cover",
+                    }}
+                  />
+                ) : (
+                  "🍽️"
+                )}
+              </div>
               <div className="summary-item__info">
                 <p className="summary-item__name">{formatTitle(item.name)}</p>
                 <p className="summary-item__unit">

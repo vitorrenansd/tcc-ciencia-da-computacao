@@ -17,6 +17,8 @@ public record NewProductRequest(
     @Positive(message = "Preço deve ser maior que zero")
     BigDecimal price,
 
+    String imageUrl, // sem anotação Jakarta, é opcional
+
     Boolean active,
 
     Boolean available
