@@ -56,7 +56,7 @@ public class ProductService {
     @Transactional
     public void updateProduct(Long id, UpdateProductRequest request) {
         Product product = productRepo.findById(id)
-                .orElseThrow(() -> new NotFoundException("Produto não encontrado. ID: " + id));
+                .orElseThrow(NotFoundException::new);
 
         productCategoryRepo.findById(request.categoryId())
                 .orElseThrow(() -> new BadRequestException("Categoria não encontrada. ID: " + request.categoryId()));
@@ -77,7 +77,7 @@ public class ProductService {
     public void uploadImage(Long id, MultipartFile file) {
         // Verifica se produto existe
         Product product = productRepo.findById(id)
-                .orElseThrow(() -> new NotFoundException("Produto não encontrado. ID: " + id));
+                .orElseThrow(NotFoundException::new);
 
         // Valida se é imagem
         String contentType = file.getContentType();
@@ -113,13 +113,13 @@ public class ProductService {
     // Inativa um produto (delete lógico)
     public void deleteProduct(Long id) {
         productRepo.findById(id)
-                .orElseThrow(() -> new NotFoundException("Produto não encontrado. ID: " + id));
+                .orElseThrow(NotFoundException::new);
         productRepo.softDelete(id);
     }
 
     public void deleteImage(Long id) {
         Product product = productRepo.findById(id)
-                .orElseThrow(() -> new NotFoundException("Produto não encontrado. ID: " + id));
+                .orElseThrow(NotFoundException::new);
 
         if (product.getImageFilename() == null) {
             throw new BadRequestException("Produto não possui imagem.");
@@ -148,9 +148,9 @@ public class ProductService {
     // Retorna os detalhes de um produto pelo ID do banco
     public ProductDetailsResponse getDetailsById(Long id) {
         Product product = productRepo.findById(id)
-                .orElseThrow(() -> new NotFoundException("Produto não encontrado. ID: " + id));
+                .orElseThrow(NotFoundException::new);
         ProductCategory category = productCategoryRepo.findById(product.getCategoryId())
-                .orElseThrow(() -> new NotFoundException("Categoria não encontrada. ID: " + id));
+                .orElseThrow(NotFoundException::new);
 
         return ProductMapper.toDetailsResponse(product, category.getName(), imageBaseUrl);
     }

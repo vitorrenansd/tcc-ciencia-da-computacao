@@ -52,7 +52,7 @@ public class OrderService {
         // Busca e valida todos os produtos
         for (NewOrderItemRequest itemRequest : request.items()) {
             Product product = productRepo.findByIdActive(itemRequest.productId())
-                    .orElseThrow(() -> new NotFoundException("Produto não encontrado ou inativo. ID: " + itemRequest.productId()));
+                    .orElseThrow(NotFoundException::new);
 
             products.add(product);
 
@@ -94,13 +94,13 @@ public class OrderService {
                             .toList();
                     return OrderMapper.toDetailsResponse(order, items); // Retorna os dados do pedido + itens
                 })
-                .orElseThrow(() -> new NotFoundException("Pedido não encontrado. ID: " + id));
+                .orElseThrow(NotFoundException::new);
     }
 
     // Atualiza o status de um pedido
     public void updateOrderStatus(Long id, UpdateOrderStatusRequest request) {
         Order order = orderRepo.findById(id)
-                .orElseThrow(() -> new NotFoundException("Pedido não encontrado. ID: " + id));
+                .orElseThrow(NotFoundException::new);
 
         if (order.getStatus().isTerminal()) {
             throw new ConflictException("Pedido já está finalizado com status: " + order.getStatus().name());
@@ -112,16 +112,16 @@ public class OrderService {
     // Cancela um item individual de um pedido
     public void cancelOrderItem(Long orderId, Long itemId) {
         orderRepo.findById(orderId)
-                .orElseThrow(() -> new NotFoundException("Pedido não encontrado. ID: " + orderId));
+                .orElseThrow(NotFoundException::new);
 
         List<OrderItem> items = orderItemRepo.findByOrderId(orderId);
         OrderItem item = items.stream()
                 .filter(i -> i.getId().equals(itemId))
                 .findFirst()
-                .orElseThrow(() -> new NotFoundException("Item não encontrado. ID: " + itemId));
+                .orElseThrow(NotFoundException::new);
 
         if (item.isCanceled()) {
-            throw new ConflictException("Item já está cancelado. ID: " + itemId);
+            throw new ConflictException("Este item já está cancelado.");
         }
 
         orderItemRepo.cancel(itemId);

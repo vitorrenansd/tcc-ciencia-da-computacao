@@ -45,13 +45,13 @@ public class CashShiftService {
     public CashShiftDetailsResponse getDetailsById(Long id) {
         return cashShiftRepo.findById(id)
                 .map(CashShiftMapper::toDetailsResponse)
-                .orElseThrow(() -> new NotFoundException("Turno de caixa não encontrado. ID: " + id));
+                .orElseThrow(NotFoundException::new);
     }
 
     // Retorna o caixa aberto neste momento
     public CashShiftDetailsResponse getOpenShift() {
         return cashShiftRepo.findOpenShift()
                 .map(CashShiftMapper::toDetailsResponse)
-                .orElseThrow(() -> new NotFoundException("Nenhum turno aberto no momento."));
+                .orElseThrow(NotFoundException::new);
     }
 }
