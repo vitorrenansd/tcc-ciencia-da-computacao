@@ -14,7 +14,9 @@ export default function ProductCard({
   function handleCardClick(e) {
     // Não navega se clicou nos botões de quantidade
     if (e.target.closest(".quantity-control")) return;
-    navigate(`/produto/${product.id}`);
+    navigate(`/produto/${product.id}`, {
+      state: { fromCategoryId: product.categoryId },
+    });
   }
 
   return (

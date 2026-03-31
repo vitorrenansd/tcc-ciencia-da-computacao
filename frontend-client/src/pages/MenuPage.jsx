@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import {
   fetchActiveCategories,
   fetchProductsByCategory,
@@ -9,6 +10,7 @@ import CartBar from "../components/CartBar";
 import "./MenuPage.css";
 
 export default function MenuPage({ cart, addToCart, setQuantity }) {
+  const location = useLocation();
   const [categories, setCategories] = useState([]);
   const [selectedCategoryId, setSelectedCategoryId] = useState(null);
   const [products, setProducts] = useState([]);
@@ -21,11 +23,19 @@ export default function MenuPage({ cart, addToCart, setQuantity }) {
     fetchActiveCategories()
       .then((data) => {
         setCategories(data);
-        if (data.length > 0) setSelectedCategoryId(data[0].id);
+        if (data.length > 0) {
+          // Se voltou de um produto, restaura a categoria anterior
+          const restored = location.state?.fromCategoryId;
+          const validId =
+            restored && data.find((c) => c.id === restored)
+              ? restored
+              : data[0].id;
+          setSelectedCategoryId(validId);
+        }
       })
       .catch(() => setError("Não foi possível carregar o cardápio."))
       .finally(() => setLoadingCategories(false));
-  }, []);
+  }, [location.state]);
 
   // Carrega produtos quando muda a categoria selecionada
   useEffect(() => {

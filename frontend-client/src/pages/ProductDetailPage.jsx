@@ -47,7 +47,11 @@ export default function ProductDetailPage({ cart, addToCart, setQuantity }) {
       <div className="detail-image img-placeholder">
         <button
           className="detail-back"
-          onClick={() => navigate(-1)}
+          onClick={() =>
+            navigate("/", {
+              state: { fromCategoryId: product.categoryId },
+            })
+          }
           aria-label="Voltar"
         >
           ←
