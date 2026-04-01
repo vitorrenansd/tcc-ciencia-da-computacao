@@ -3,6 +3,7 @@ package com.tcc.serveme.api.order.repository;
 import com.tcc.serveme.api.order.entity.Order;
 import com.tcc.serveme.api.order.entity.OrderStatus;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -11,6 +12,7 @@ public interface OrderRepository {
     List<Order> findAll();
     Long save(Order order);
     int updateStatus(Long id, OrderStatus status);
+    void subtractFromTotal(Long id, BigDecimal amount);
 
     List<Order> findAllByShiftIdAndStatus(Long cashShiftId, OrderStatus status);
     List<Order> findAllByShiftId(Long cashShiftId);

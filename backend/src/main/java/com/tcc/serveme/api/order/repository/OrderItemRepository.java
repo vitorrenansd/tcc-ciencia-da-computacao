@@ -6,6 +6,7 @@ import java.util.List;
 
 public interface OrderItemRepository {
     int save(OrderItem orderItem);
+    boolean hasActiveItems(Long orderId);
 
     List<OrderItem> findByOrderId(Long orderId);
     List<OrderItem> findActiveOrderItemsByTableNumber(Integer tableNumber);

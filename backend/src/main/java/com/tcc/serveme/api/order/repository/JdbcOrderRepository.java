@@ -10,6 +10,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.sql.Timestamp;
@@ -86,6 +87,17 @@ public class JdbcOrderRepository implements OrderRepository {
             WHERE id = ?
             """;
         return jdbc.update(sql, status.name(), id);
+    }
+
+    @Override
+    // Subtrai atomicamente, evita race condition
+    public void subtractFromTotal(Long id, BigDecimal amount) {
+        String sql = """
+                UPDATE orders
+                SET total_price = total_price - ?
+                WHERE id = ?
+                """;
+        jdbc.update(sql, amount, id);
     }
 
     // ************************

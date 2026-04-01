@@ -42,6 +42,7 @@ public class ProductMapper {
                 : null;
         return new ProductSummaryResponse(
                 product.getId(),
+                product.getCategoryId(),
                 product.getName(),
                 product.getPrice(),
                 imageUrl

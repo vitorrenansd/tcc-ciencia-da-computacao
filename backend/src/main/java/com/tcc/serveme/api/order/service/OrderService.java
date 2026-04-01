@@ -110,6 +110,7 @@ public class OrderService {
     }
 
     // Cancela um item individual de um pedido
+    @Transactional
     public void cancelOrderItem(Long orderId, Long itemId) {
         orderRepo.findById(orderId)
                 .orElseThrow(NotFoundException::new);
@@ -124,7 +125,17 @@ public class OrderService {
             throw new ConflictException("Este item já está cancelado.");
         }
 
+        // Calcula o valor a subtrair usando o snapshot do item
+        BigDecimal deduction = item.getProductPrice()
+                .multiply(BigDecimal.valueOf(item.getQuantity()));
+
         orderItemRepo.cancel(itemId);
+        orderRepo.subtractFromTotal(orderId, deduction);
+
+        // Caso não houver nenhum item ativo, o pedido é cancelado
+        if (!orderItemRepo.hasActiveItems(orderId)) {
+            orderRepo.updateStatus(orderId, OrderStatus.CANCELED);
+        }
     }
 
     // Substitui os 5 métodos getPendingOrders, getOrdersInProgress, etc.

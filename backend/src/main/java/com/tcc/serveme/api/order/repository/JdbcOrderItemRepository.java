@@ -45,7 +45,18 @@ public class JdbcOrderItemRepository implements OrderItemRepository {
                 orderItem.getNotes()
         );
     }
-    
+
+    @Override
+    public boolean hasActiveItems(Long orderId) {
+        String sql = """
+            SELECT COUNT(*) FROM order_item
+            WHERE order_id = ?
+            AND canceled = FALSE
+            """;
+        Integer count = jdbc.queryForObject(sql, Integer.class, orderId);
+        return count != null && count > 0;
+    }
+
     // ************************
     //  Specific queries below
     // ************************
