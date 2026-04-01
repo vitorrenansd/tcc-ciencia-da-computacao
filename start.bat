@@ -47,7 +47,7 @@ start "Serve-me Backend" cmd /k "cd /d "%BACKEND%" && java -jar build\libs\serve
 
 :: Aguarda backend subir
 echo Aguardando backend inicializar...
-timeout /t 8 /nobreak >nul
+timeout /t 4 /nobreak >nul
 
 :: ── 4. Inicia frontend em nova janela ────
 echo Iniciando frontend-client em nova janela...
