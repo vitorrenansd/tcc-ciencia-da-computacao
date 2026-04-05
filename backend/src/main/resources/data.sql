@@ -36,3 +36,7 @@ INSERT INTO cash_shift (opened_at, closed_at, status) VALUES
 ('2026-03-02 18:00:00', '2026-03-02 22:00:00', 'CLOSED'),
 ('2026-03-03 18:00:00', '2026-03-03 22:00:00', 'CLOSED'),
 ('2026-03-04 18:00:00', null, 'OPEN');
+
+-- DADOS DE RESTAURANTE
+INSERT INTO restaurant_config (id, name, icon_filename)
+VALUES (1, 'Restaurante Exemplo', null);

@@ -11,6 +11,13 @@
   gap: 10px;
 }
 
+.menu-header__icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  object-fit: cover;
+}
+
 .menu-header__logo {
   font-size: 1.4rem;
 }

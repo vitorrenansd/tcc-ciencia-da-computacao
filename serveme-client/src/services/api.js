@@ -1,4 +1,4 @@
-const BASE_URL = import.meta.env.VITE_API_URL;
+const BASE_URL = "/api";
 
 // Busca todas as categorias ativas
 export async function fetchActiveCategories() {
@@ -34,5 +34,12 @@ export async function createOrder(payload) {
     const err = await res.json().catch(() => ({}));
     throw new Error(err.message || "Erro ao enviar pedido");
   }
+  return res.json();
+}
+
+// Busca configurações do restaurante (nome e ícone)
+export async function fetchRestaurantConfig() {
+  const res = await fetch(`${BASE_URL}/config`);
+  if (!res.ok) throw new Error("Erro ao buscar configurações");
   return res.json();
 }

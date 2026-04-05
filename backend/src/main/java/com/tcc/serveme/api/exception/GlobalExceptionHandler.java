@@ -17,7 +17,7 @@ public class GlobalExceptionHandler {
     // a API retorna algo como:
     // {
     //    "status": 404, (http404 not found)
-    //    "message": "Nenhum turno aberto no momento.",
+    //    "message": "Recurso não encontrado.",
     //    "timestamp": "2026-03-12T21:47:17.9413634"
     // }
     @ExceptionHandler(AppException.class)
