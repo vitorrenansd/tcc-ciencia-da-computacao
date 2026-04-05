@@ -31,9 +31,9 @@ public class ProductService {
     private final ProductCategoryRepository productCategoryRepo;
 
     @Value("${serve-me.images.path}")
-    private String imagesPath;
+    private String uploadDir;
     @Value("${serve-me.images.base-url}")
-    private String imageBaseUrl;
+    private String baseUrl;
 
     @Autowired
     public ProductService(ProductRepository productRepo, ProductCategoryRepository productCategoryRepo) {
@@ -91,7 +91,7 @@ public class ProductService {
 
         // Salva o arquivo no diretório configurado
         try {
-            Path destination = Paths.get(imagesPath).resolve(filename);
+            Path destination = Paths.get(uploadDir).resolve("products/").resolve(filename);
             Files.createDirectories(destination.getParent());
             file.transferTo(destination.toFile());
         } catch (IOException e) {
@@ -101,7 +101,7 @@ public class ProductService {
         // Se já havia imagem anterior, deleta do disco
         if (product.getImageFilename() != null) {
             try {
-                Path old = Paths.get(imagesPath).resolve(product.getImageFilename());
+                Path old = Paths.get(uploadDir).resolve("products/").resolve(product.getImageFilename());
                 Files.deleteIfExists(old);
             } catch (IOException ignored) {}
         }
@@ -127,7 +127,7 @@ public class ProductService {
 
         // Deleta do disco
         try {
-            Path path = Paths.get(imagesPath).resolve(product.getImageFilename());
+            Path path = Paths.get(uploadDir).resolve("products/").resolve(product.getImageFilename());
             Files.deleteIfExists(path);
         } catch (IOException e) {
             throw new RuntimeException("Erro ao deletar imagem.", e);
@@ -141,7 +141,7 @@ public class ProductService {
     public List<ProductSummaryResponse> getAllProducts() {
         return productRepo.findAll()
                 .stream()
-                .map(p -> ProductMapper.toSummaryResponse(p, imageBaseUrl))
+                .map(p -> ProductMapper.toSummaryResponse(p, baseUrl))
                 .toList();
     }
 
@@ -152,14 +152,14 @@ public class ProductService {
         ProductCategory category = productCategoryRepo.findById(product.getCategoryId())
                 .orElseThrow(NotFoundException::new);
 
-        return ProductMapper.toDetailsResponse(product, category.getName(), imageBaseUrl);
+        return ProductMapper.toDetailsResponse(product, category.getName(), baseUrl);
     }
 
     // Retorna um List com os produtos da keyword digitada (pesquisa por nome)
     public List<ProductSummaryResponse> getProductsByName(String keyword) {
         return productRepo.findAllByName(keyword)
                 .stream()
-                .map(p -> ProductMapper.toSummaryResponse(p, imageBaseUrl))
+                .map(p -> ProductMapper.toSummaryResponse(p, baseUrl))
                 .toList();
     }
 
@@ -167,7 +167,7 @@ public class ProductService {
     public List<ProductSummaryResponse> getProductsByCategory(Long categoryId) {
         return productRepo.findAllByCategory(categoryId)
                 .stream()
-                .map(p -> ProductMapper.toSummaryResponse(p, imageBaseUrl))
+                .map(p -> ProductMapper.toSummaryResponse(p, baseUrl))
                 .toList();
     }
 
@@ -175,7 +175,7 @@ public class ProductService {
     public List<ProductSummaryResponse> getAvailableProductsByCategory(Long categoryId) {
         return productRepo.findAllAvailableByCategory(categoryId)
                 .stream()
-                .map(p -> ProductMapper.toSummaryResponse(p, imageBaseUrl))  // Mapeia o retorno do repo para um DTO valido
+                .map(p -> ProductMapper.toSummaryResponse(p, baseUrl))  // Mapeia o retorno do repo para um DTO valido
                 .toList();
     }
 }
