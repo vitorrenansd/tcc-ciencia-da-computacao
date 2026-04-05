@@ -20,7 +20,7 @@ public class ProductMapper {
 
     public static ProductDetailsResponse toDetailsResponse(Product product, String categoryName, String baseUrl) {
         String imageUrl = product.getImageFilename() != null
-                ? baseUrl + product.getImageFilename()
+                ? baseUrl + "products/" + product.getImageFilename()
                 : null;
         return new ProductDetailsResponse(
                 product.getId(),
@@ -38,14 +38,17 @@ public class ProductMapper {
 
     public static ProductSummaryResponse toSummaryResponse(Product product, String baseUrl) {
         String imageUrl = product.getImageFilename() != null
-                ? baseUrl + product.getImageFilename()
+                ? baseUrl + "products/" + product.getImageFilename()
                 : null;
         return new ProductSummaryResponse(
                 product.getId(),
                 product.getCategoryId(),
                 product.getName(),
+                product.getDescription(),
                 product.getPrice(),
-                imageUrl
+                imageUrl,
+                product.isActive(),
+                product.isAvailable()
         );
     }
 
