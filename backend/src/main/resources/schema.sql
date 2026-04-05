@@ -58,4 +58,10 @@ CREATE TABLE order_item (
         REFERENCES product(id)
 );
 
+CREATE TABLE restaurant_config (
+    id IDENTITY PRIMARY KEY,
+    name VARCHAR(80) NOT NULL,
+    icon_filename VARCHAR(500) NULL
+);
+
 -- Criar indices depois
