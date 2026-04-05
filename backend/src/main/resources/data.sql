@@ -39,4 +39,4 @@ INSERT INTO cash_shift (opened_at, closed_at, status) VALUES
 
 -- DADOS DE RESTAURANTE
 INSERT INTO restaurant_config (id, name, icon_filename)
-VALUES (1, 'Serve-me', null);
+VALUES (1, 'Restaurante Exemplo', null);
